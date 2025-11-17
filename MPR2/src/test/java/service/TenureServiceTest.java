@@ -5,7 +5,8 @@ import model.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import java.time.LocalDate;
 
 
@@ -42,5 +43,27 @@ class TenureServiceTest {
         assertThat(staz)
                 .as("Staż w latach powinien wynosić 2")
                 .isEqualTo(2L); // 'L' na końcu, bo to typ 'long'
+    }
+    @ParameterizedTest(name = "Zatrudniony {0}, dzisiaj {1} -> Staż = {2} lat")
+    @CsvSource({
+            "2025-11-17, 2025-11-17, 0", // Scenariusz 1: Zatrudniony dzisiaj
+            "2024-11-18, 2025-11-17, 0", // Scenariusz 2: Zatrudniony 364 dni temu
+            "2024-11-17, 2025-11-17, 1", // Scenariusz 3: Zatrudniony dokładnie rok temu
+            "2027-01-01, 2025-11-17, 0"  // Scenariusz 4: Zatrudniony w przyszłości (oczekuje 0, nie -2)
+    })
+    void shouldCalculateTenureForEdgeCases(String hireDateStr, String todayStr, long expectedYears) {
+        // Arrange
+        LocalDate hireDate = LocalDate.parse(hireDateStr);
+        LocalDate today = LocalDate.parse(todayStr);
+
+        Employee testEmployee = new Employee("Test User", "test@test.pl", "Tech", Position.STAZYSTA, 3000, hireDate);
+
+
+        long staz = tenureService.getTenureInYears(testEmployee, today);
+
+
+        assertThat(staz)
+                .as("Staż dla daty %s", hireDate)
+                .isEqualTo(expectedYears);
     }
 }
