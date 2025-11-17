@@ -25,14 +25,21 @@ repositories {
     mavenCentral()
 }
 
-// Sekcja zależności została POŁĄCZONA
+// Sekcja zależności została POŁĄCZONA i UZUPEŁNIONA
 dependencies {
     // Nasza stara zależność do JSONa
     implementation 'com.google.code.gson:gson:2.10.1'
 
-    // --- NOWA ZALEŻNOŚĆ TESTOWA ---
-    // To jest JUnit 5. Zwróć uwagę na 'testImplementation'
+    // --- ZALEŻNOŚCI TESTOWE ---
+
+    // JUnit 5 (już go mieliśmy)
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+
+    // NOWA: Biblioteka AssertJ (ta z płynnym API)
+    testImplementation 'org.assertj:assertj-core:3.26.3' // <-- DODANE
+
+    // NOWA: Biblioteka Hamcrest (ta z matcherami 'is', 'equalTo')
+    testImplementation 'org.hamcrest:hamcrest:2.2' // <-- DODANE
 }
 
 // --- NOWA KONFIGURACJA TESTÓW ---

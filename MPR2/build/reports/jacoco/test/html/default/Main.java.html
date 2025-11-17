@@ -11,23 +11,23 @@ import java.util.Map;
 <span class="nc" id="L11">public class Main {</span>
     public static void main(String[] args) {
 
-        // 1. Tworzymy gĹ‚Ăłwny serwis (teraz nazywa siÄ™ EmployeeService)
+        // 1. Tworzymy główny serwis (teraz nazywa się EmployeeService)
 <span class="nc" id="L15">        EmployeeService service = new EmployeeService();</span>
 
-        // 2. Tworzymy serwisy do importu, przekazujÄ…c im ten gĹ‚Ăłwny serwis
+        // 2. Tworzymy serwisy do importu, przekazując im ten główny serwis
 <span class="nc" id="L18">        ImportService importService = new ImportService(service);</span>
 <span class="nc" id="L19">        ApiService apiService = new ApiService();</span>
 
         // --- TESTUJEMY IMPORT Z CSV ---
 <span class="nc" id="L22">        System.out.println(&quot;=== 1. Rozpoczynam import z CSV ===&quot;);</span>
 
-        // UWAGA: StwĂłrz plik 'employees.csv' w gĹ‚Ăłwnym katalogu projektu!
+        // UWAGA: Stwórz plik 'employees.csv' w głównym katalogu projektu!
 <span class="nc" id="L25">        ImportSummary summary = importService.importFromCsv(&quot;employees.csv&quot;);</span>
 
-<span class="nc" id="L27">        System.out.println(&quot;Import zakoĹ„czony. Podsumowanie:&quot;);</span>
-<span class="nc" id="L28">        System.out.println(&quot; &gt; Zaimportowano pomyĹ›lnie: &quot; + summary.getImportedCount() + &quot; pracownikĂłw.&quot;);</span>
+<span class="nc" id="L27">        System.out.println(&quot;Import zakończony. Podsumowanie:&quot;);</span>
+<span class="nc" id="L28">        System.out.println(&quot; &gt; Zaimportowano pomyślnie: &quot; + summary.getImportedCount() + &quot; pracowników.&quot;);</span>
 <span class="nc bnc" id="L29" title="All 2 branches missed.">        if (!summary.getErrors().isEmpty()) {</span>
-<span class="nc" id="L30">            System.out.println(&quot; &gt; WystÄ…piĹ‚y bĹ‚Ä™dy (&quot; + summary.getErrors().size() + &quot;):&quot;);</span>
+<span class="nc" id="L30">            System.out.println(&quot; &gt; Wystąpiły błędy (&quot; + summary.getErrors().size() + &quot;):&quot;);</span>
 <span class="nc bnc" id="L31" title="All 2 branches missed.">            for (String error : summary.getErrors()) {</span>
 <span class="nc" id="L32">                System.out.println(&quot;   - &quot; + error);</span>
 <span class="nc" id="L33">            }</span>
@@ -39,20 +39,20 @@ import java.util.Map;
 <span class="nc" id="L39">        System.out.println(&quot;\n=== 2. Pobieranie danych z REST API ===&quot;);</span>
         try {
 <span class="nc" id="L41">            List&lt;Employee&gt; apiEmployees = apiService.fetchEmployeesFromApi();</span>
-<span class="nc" id="L42">            System.out.println(&quot;Pobrano &quot; + apiEmployees.size() + &quot; pracownikĂłw z API.&quot;);</span>
+<span class="nc" id="L42">            System.out.println(&quot;Pobrano &quot; + apiEmployees.size() + &quot; pracowników z API.&quot;);</span>
 
-            // Dodajemy pobranych pracownikĂłw do naszego serwisu
+            // Dodajemy pobranych pracowników do naszego serwisu
 <span class="nc" id="L45">            int addedFromApi = 0;</span>
 <span class="nc bnc" id="L46" title="All 2 branches missed.">            for (Employee emp : apiEmployees) {</span>
 <span class="nc bnc" id="L47" title="All 2 branches missed.">                if (service.addEmployee(emp)) {</span>
 <span class="nc" id="L48">                    addedFromApi++;</span>
                 }
 <span class="nc" id="L50">            }</span>
-<span class="nc" id="L51">            System.out.println(addedFromApi + &quot; nowych pracownikĂłw zostaĹ‚o dodanych do bazy.&quot;);</span>
+<span class="nc" id="L51">            System.out.println(addedFromApi + &quot; nowych pracowników zostało dodanych do bazy.&quot;);</span>
 
 <span class="nc" id="L53">        } catch (ApiException e) {</span>
-<span class="nc" id="L54">            System.err.println(&quot;NIE UDAĹ�O SIÄ� POBRAÄ† DANYCH Z API: &quot; + e.getMessage());</span>
-<span class="nc" id="L55">            e.printStackTrace(); // Pokazuje nam caĹ‚y &quot;Ĺ›lad&quot; bĹ‚Ä™du</span>
+<span class="nc" id="L54">            System.err.println(&quot;NIE UDAŁO SIĘ POBRAĆ DANYCH Z API: &quot; + e.getMessage());</span>
+<span class="nc" id="L55">            e.printStackTrace(); // Pokazuje nam cały &quot;ślad&quot; błędu</span>
 <span class="nc" id="L56">        }</span>
 
 <span class="nc" id="L58">        System.out.println(&quot;\n--- Stan bazy po imporcie z API ---&quot;);</span>
@@ -60,13 +60,13 @@ import java.util.Map;
 
         // --- TESTUJEMY NOWE METODY ANALITYCZNE ---
 
-        // Test 1: NiespĂłjne pensje
-<span class="nc" id="L64">        System.out.println(&quot;\n=== 3. Analiza: NiespĂłjne pensje (poniĹĽej bazy) ===&quot;);</span>
+        // Test 1: Niespójne pensje
+<span class="nc" id="L64">        System.out.println(&quot;\n=== 3. Analiza: Niespójne pensje (poniżej bazy) ===&quot;);</span>
 <span class="nc" id="L65">        List&lt;Employee&gt; inconsistent = service.validateSalaryConsistency();</span>
 <span class="nc bnc" id="L66" title="All 2 branches missed.">        if (inconsistent.isEmpty()) {</span>
-<span class="nc" id="L67">            System.out.println(&quot;Wszyscy pracownicy zarabiajÄ… powyĹĽej bazy dla swojego stanowiska. Jest OK!&quot;);</span>
+<span class="nc" id="L67">            System.out.println(&quot;Wszyscy pracownicy zarabiają powyżej bazy dla swojego stanowiska. Jest OK!&quot;);</span>
         } else {
-<span class="nc" id="L69">            System.out.println(&quot;Znaleziono pracownikĂłw z pensjÄ… poniĹĽej bazy:&quot;);</span>
+<span class="nc" id="L69">            System.out.println(&quot;Znaleziono pracowników z pensją poniżej bazy:&quot;);</span>
 <span class="nc bnc" id="L70" title="All 2 branches missed.">            for (Employee e : inconsistent) {</span>
 <span class="nc" id="L71">                System.out.println(&quot;  -&gt; &quot; + e.getName() + &quot; (Stawka: &quot; + e.getSalary() + &quot;, Baza: &quot; + e.getPosition().getBaseSalary() + &quot;)&quot;);</span>
 <span class="nc" id="L72">            }</span>
@@ -74,15 +74,15 @@ import java.util.Map;
 
         // Test 2: Statystyki firm
 <span class="nc" id="L76">        System.out.println(&quot;\n=== 4. Analiza: Statystyki firm ===&quot;);</span>
-<span class="nc" id="L77">        var companyStats = service.getCompanyStatistics(); // 'var' to skrĂłt od Map&lt;String, CompanyStatistics&gt;</span>
+<span class="nc" id="L77">        var companyStats = service.getCompanyStatistics(); // 'var' to skrót od Map&lt;String, CompanyStatistics&gt;</span>
 
 <span class="nc bnc" id="L79" title="All 2 branches missed.">        if (companyStats.isEmpty()) {</span>
 <span class="nc" id="L80">            System.out.println(&quot;Brak danych do wygenerowania statystyk.&quot;);</span>
         } else {
-            // Iterujemy po mapie statystyk i Ĺ‚adnie je drukujemy
+            // Iterujemy po mapie statystyk i ładnie je drukujemy
 <span class="nc bnc" id="L83" title="All 2 branches missed.">            for (Map.Entry&lt;String, model.CompanyStatistics&gt; entry : companyStats.entrySet()) {</span>
 <span class="nc" id="L84">                System.out.println(&quot;\nFirma: &quot; + entry.getKey());</span>
-<span class="nc" id="L85">                System.out.println(&quot;  &quot; + entry.getValue()); // Tu zadziaĹ‚a nasz .toString() z CompanyStatistics</span>
+<span class="nc" id="L85">                System.out.println(&quot;  &quot; + entry.getValue()); // Tu zadziała nasz .toString() z CompanyStatistics</span>
 <span class="nc" id="L86">            }</span>
         }
 <span class="nc" id="L88">    }</span>

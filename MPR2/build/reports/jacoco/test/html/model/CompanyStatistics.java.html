@@ -6,28 +6,28 @@ import java.text.DecimalFormat;
 public class CompanyStatistics {
     private int employeeCount;
     private double averageSalary;
-    private String highestEarnerName; // PeĹ‚ne imiÄ™ i nazwisko
+    private String highestEarnerName; // Pełne imię i nazwisko
 
-<span class="fc" id="L11">    public CompanyStatistics(int employeeCount, double averageSalary, String highestEarnerName) {</span>
-<span class="fc" id="L12">        this.employeeCount = employeeCount;</span>
-<span class="fc" id="L13">        this.averageSalary = averageSalary;</span>
-<span class="fc" id="L14">        this.highestEarnerName = highestEarnerName;</span>
-<span class="fc" id="L15">    }</span>
+<span class="nc" id="L11">    public CompanyStatistics(int employeeCount, double averageSalary, String highestEarnerName) {</span>
+<span class="nc" id="L12">        this.employeeCount = employeeCount;</span>
+<span class="nc" id="L13">        this.averageSalary = averageSalary;</span>
+<span class="nc" id="L14">        this.highestEarnerName = highestEarnerName;</span>
+<span class="nc" id="L15">    }</span>
 
-    // Gettery (gdybyĹ›my ich potrzebowali)
-<span class="fc" id="L18">    public int getEmployeeCount() { return employeeCount; }</span>
-<span class="fc" id="L19">    public double getAverageSalary() { return averageSalary; }</span>
-<span class="fc" id="L20">    public String getHighestEarnerName() { return highestEarnerName; }</span>
+    // Gettery (gdybyśmy ich potrzebowali)
+<span class="nc" id="L18">    public int getEmployeeCount() { return employeeCount; }</span>
+<span class="nc" id="L19">    public double getAverageSalary() { return averageSalary; }</span>
+<span class="nc" id="L20">    public String getHighestEarnerName() { return highestEarnerName; }</span>
 
-    // Nadpisujemy toString, ĹĽeby fajnie siÄ™ drukowaĹ‚o na konsoli
+    // Nadpisujemy toString, żeby fajnie się drukowało na konsoli
     @Override
     public String toString() {
-        // MaĹ‚y trik na sformatowanie pensji do dwĂłch miejsc po przecinku
+        // Mały trik na sformatowanie pensji do dwóch miejsc po przecinku
 <span class="nc" id="L26">        DecimalFormat df = new DecimalFormat(&quot;#.00&quot;);</span>
 <span class="nc" id="L27">        return &quot;Statystyki firmy: &quot; +</span>
-                &quot;Liczba pracownikĂłw=&quot; + employeeCount +
-<span class="nc" id="L29">                &quot;, Ĺšrednia pensja=&quot; + df.format(averageSalary) + &quot; PLN&quot; +</span>
-                &quot;, Najlepiej zarabiajÄ…cy='&quot; + highestEarnerName + '\'';
+                &quot;Liczba pracowników=&quot; + employeeCount +
+<span class="nc" id="L29">                &quot;, Średnia pensja=&quot; + df.format(averageSalary) + &quot; PLN&quot; +</span>
+                &quot;, Najlepiej zarabiający='&quot; + highestEarnerName + '\'';
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

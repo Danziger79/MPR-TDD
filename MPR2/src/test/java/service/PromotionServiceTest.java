@@ -32,7 +32,7 @@ class PromotionServiceTest {
         promotionService.promote(stazysta, Position.PROGRAMISTA);
 
         // Assert (Używamy AssertJ)
-     
+
 
         assertThat(stazysta.getPosition())
                 .as("Sprawdzenie, czy stanowisko się zmieniło")

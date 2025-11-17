@@ -2,6 +2,7 @@
 
 import java.util.Objects;
 
+
 public class Employee {
     private String name;
     private String email;
@@ -9,54 +10,48 @@ public class Employee {
     private Position position;
     private double salary;
 
-<span class="fc" id="L12">    public Employee(String name, String email, String companyName, Position position, double salary) {</span>
-<span class="fc" id="L13">        this.name = name;</span>
-<span class="fc" id="L14">        this.email = email;</span>
-<span class="fc" id="L15">        this.companyName = companyName;</span>
-<span class="fc" id="L16">        this.position = position;</span>
-<span class="fc" id="L17">        this.salary = salary;</span>
-<span class="fc" id="L18">    }</span>
 
-    public String getName() {
-<span class="fc" id="L21">        return name;</span>
-    }
+<span class="fc" id="L14">    public Employee(String name, String email, String companyName, Position position, double salary) {</span>
 
-    public String getEmail() {
-<span class="nc" id="L25">        return email;</span>
-    }
+<span class="fc" id="L16">        this.name = name;</span>
+<span class="fc" id="L17">        this.email = email;</span>
+<span class="fc" id="L18">        this.companyName = companyName;</span>
+<span class="fc" id="L19">        this.position = position;</span>
+<span class="fc" id="L20">        this.salary = salary;</span>
+<span class="fc" id="L21">    }</span>
 
-    public String getCompanyName() {
-<span class="fc" id="L29">        return companyName;</span>
-    }
 
-    public Position getPosition() {
-<span class="fc" id="L33">        return position;</span>
-    }
+<span class="nc" id="L24">    public String getName() { return name; }</span>
+<span class="nc" id="L25">    public String getEmail() { return email; }</span>
+<span class="nc" id="L26">    public String getCompanyName() { return companyName; }</span>
+<span class="fc" id="L27">    public Position getPosition() { return position; }</span>
+<span class="fc" id="L28">    public double getSalary() { return salary; }</span>
 
-    public double getSalary() {
-<span class="fc" id="L37">        return salary;</span>
-    }
 
     public void setSalary(double salary) {
-<span class="nc" id="L41">        this.salary = salary;</span>
-<span class="nc" id="L42">    }</span>
+<span class="fc" id="L32">        this.salary = salary;</span>
+<span class="fc" id="L33">    }</span>
+
+    public void setPosition(Position position) {
+<span class="fc" id="L36">        this.position = position;</span>
+<span class="fc" id="L37">    }</span>
 
     @Override
     public boolean equals(Object o) {
-<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (this == o) return true;</span>
-<span class="fc bfc" id="L47" title="All 2 branches covered.">        if (!(o instanceof Employee)) return false;</span>
-<span class="fc" id="L48">        Employee employee = (Employee) o;</span>
-<span class="fc" id="L49">        return Objects.equals(email, employee.email);</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        if (this == o) return true;</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (!(o instanceof Employee)) return false;</span>
+<span class="nc" id="L43">        Employee employee = (Employee) o;</span>
+<span class="nc" id="L44">        return Objects.equals(email, employee.email);</span>
     }
 
     @Override
     public int hashCode() {
-<span class="fc" id="L54">        return Objects.hash(email);</span>
+<span class="nc" id="L49">        return Objects.hash(email);</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L59">        return name + &quot; (&quot; + position + &quot;) - &quot; + salary + &quot; PLN, &quot; + companyName;</span>
+<span class="nc" id="L54">        return name + &quot; (&quot; + position + &quot;) - &quot; + salary + &quot; PLN, &quot; + companyName;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

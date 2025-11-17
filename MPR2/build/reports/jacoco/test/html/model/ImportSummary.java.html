@@ -3,7 +3,7 @@
 import java.util.List;
 
 // Ta klasa to taki &quot;raport&quot; z importu CSV.
-// MĂłwi, ile siÄ™ udaĹ‚o, a co poszĹ‚o nie tak.
+// Mówi, ile się udało, a co poszło nie tak.
 public class ImportSummary {
     private int importedCount;
     private List&lt;String&gt; errors;
@@ -25,7 +25,7 @@ public class ImportSummary {
     public String toString() {
 <span class="nc" id="L26">        return &quot;ImportSummary{&quot; +</span>
                 &quot;zaimportowano=&quot; + importedCount +
-<span class="nc" id="L28">                &quot;, bĹ‚Ä™dy=&quot; + errors.size() +</span>
+<span class="nc" id="L28">                &quot;, błędy=&quot; + errors.size() +</span>
                 '}';
     }
 }

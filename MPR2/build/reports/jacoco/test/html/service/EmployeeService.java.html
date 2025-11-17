@@ -9,23 +9,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// Kompletny serwis - Ĺ‚Ä…czymy logikÄ™ z zadania 1 i 2
-<span class="fc" id="L13">public class EmployeeService {</span>
+// Kompletny serwis - łączymy logikę z zadania 1 i 2
+<span class="nc" id="L13">public class EmployeeService {</span>
 
-    // Lista juĹĽ nie jest 'static'! KaĹĽda instancja serwisu
-    // ma swojÄ… wĹ‚asnÄ… listÄ™. To JEST kluczowe dla testĂłw.
-<span class="fc" id="L17">    private final List&lt;Employee&gt; employees = new ArrayList&lt;&gt;();</span>
+    // Lista już nie jest 'static'! Każda instancja serwisu
+    // ma swoją własną listę. To JEST kluczowe dla testów.
+<span class="nc" id="L17">    private final List&lt;Employee&gt; employees = new ArrayList&lt;&gt;();</span>
 
     // --- Metody z pierwszego zadania (oryginalne) ---
 
     public boolean addEmployee(Employee employee) {
-<span class="fc bfc" id="L22" title="All 2 branches covered.">        for (Employee e : employees) {</span>
-<span class="fc bfc" id="L23" title="All 2 branches covered.">            if (e.equals(employee)) { // equals() sprawdza po emailu</span>
-<span class="fc" id="L24">                return false;</span>
+<span class="nc bnc" id="L22" title="All 2 branches missed.">        for (Employee e : employees) {</span>
+<span class="nc bnc" id="L23" title="All 2 branches missed.">            if (e.equals(employee)) { // equals() sprawdza po emailu</span>
+<span class="nc" id="L24">                return false;</span>
             }
-<span class="fc" id="L26">        }</span>
-<span class="fc" id="L27">        employees.add(employee);</span>
-<span class="fc" id="L28">        return true;</span>
+<span class="nc" id="L26">        }</span>
+<span class="nc" id="L27">        employees.add(employee);</span>
+<span class="nc" id="L28">        return true;</span>
     }
 
     public void showAllEmployees() {
@@ -35,142 +35,142 @@ import java.util.Map;
 <span class="nc" id="L35">    }</span>
 
     public List&lt;Employee&gt; findByCompany(String companyName) {
-<span class="fc" id="L38">        List&lt;Employee&gt; result = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L39" title="All 2 branches covered.">        for (Employee e : employees) {</span>
-<span class="fc bfc" id="L40" title="All 2 branches covered.">            if (e.getCompanyName().equalsIgnoreCase(companyName)) {</span>
-<span class="fc" id="L41">                result.add(e);</span>
+<span class="nc" id="L38">        List&lt;Employee&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        for (Employee e : employees) {</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">            if (e.getCompanyName().equalsIgnoreCase(companyName)) {</span>
+<span class="nc" id="L41">                result.add(e);</span>
             }
-<span class="fc" id="L43">        }</span>
-<span class="fc" id="L44">        return result;</span>
+<span class="nc" id="L43">        }</span>
+<span class="nc" id="L44">        return result;</span>
     }
 
-    // --- Metody przywrĂłcone (o ktĂłre prosi zadanie testowe) ---
+    // --- Metody przywrócone (o które prosi zadanie testowe) ---
 
     /**
-     * Zwraca KopiÄ™ listy posortowanÄ… alfabetycznie po imieniu.
+     * Zwraca Kopię listy posortowaną alfabetycznie po imieniu.
      * Nie modyfikuje oryginalnej listy.
      */
     public List&lt;Employee&gt; sortByName() {
-        // Tworzymy kopiÄ™ listy, ĹĽeby nie zmieniaÄ‡ oryginaĹ‚u
-<span class="fc" id="L55">        List&lt;Employee&gt; sortedList = new ArrayList&lt;&gt;(employees);</span>
+        // Tworzymy kopię listy, żeby nie zmieniać oryginału
+<span class="nc" id="L55">        List&lt;Employee&gt; sortedList = new ArrayList&lt;&gt;(employees);</span>
 
-        // Klasyczny sort bÄ…belkowy (z zadania 1)
-<span class="fc bfc" id="L58" title="All 2 branches covered.">        for (int i = 0; i &lt; sortedList.size() - 1; i++) {</span>
-<span class="fc bfc" id="L59" title="All 2 branches covered.">            for (int j = 0; j &lt; sortedList.size() - 1 - i; j++) {</span>
-<span class="fc bfc" id="L60" title="All 2 branches covered.">                if (sortedList.get(j).getName().compareToIgnoreCase(sortedList.get(j + 1).getName()) &gt; 0) {</span>
-<span class="fc" id="L61">                    Employee temp = sortedList.get(j);</span>
-<span class="fc" id="L62">                    sortedList.set(j, sortedList.get(j + 1));</span>
-<span class="fc" id="L63">                    sortedList.set(j + 1, temp);</span>
+        // Klasyczny sort bąbelkowy (z zadania 1)
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        for (int i = 0; i &lt; sortedList.size() - 1; i++) {</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">            for (int j = 0; j &lt; sortedList.size() - 1 - i; j++) {</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">                if (sortedList.get(j).getName().compareToIgnoreCase(sortedList.get(j + 1).getName()) &gt; 0) {</span>
+<span class="nc" id="L61">                    Employee temp = sortedList.get(j);</span>
+<span class="nc" id="L62">                    sortedList.set(j, sortedList.get(j + 1));</span>
+<span class="nc" id="L63">                    sortedList.set(j + 1, temp);</span>
                 }
             }
         }
-<span class="fc" id="L67">        return sortedList;</span>
+<span class="nc" id="L67">        return sortedList;</span>
     }
 
     /**
-     * Grupuje pracownikĂłw po stanowisku.
+     * Grupuje pracowników po stanowisku.
      */
     public Map&lt;Position, List&lt;Employee&gt;&gt; groupByPosition() {
-<span class="fc" id="L74">        Map&lt;Position, List&lt;Employee&gt;&gt; grouped = new HashMap&lt;&gt;();</span>
-<span class="fc bfc" id="L75" title="All 2 branches covered.">        for (Employee e : employees) {</span>
-<span class="fc" id="L76">            Position pos = e.getPosition();</span>
-<span class="fc bfc" id="L77" title="All 2 branches covered.">            if (!grouped.containsKey(pos)) {</span>
-<span class="fc" id="L78">                grouped.put(pos, new ArrayList&lt;&gt;());</span>
+<span class="nc" id="L74">        Map&lt;Position, List&lt;Employee&gt;&gt; grouped = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        for (Employee e : employees) {</span>
+<span class="nc" id="L76">            Position pos = e.getPosition();</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">            if (!grouped.containsKey(pos)) {</span>
+<span class="nc" id="L78">                grouped.put(pos, new ArrayList&lt;&gt;());</span>
             }
-<span class="fc" id="L80">            grouped.get(pos).add(e);</span>
-<span class="fc" id="L81">        }</span>
-<span class="fc" id="L82">        return grouped;</span>
+<span class="nc" id="L80">            grouped.get(pos).add(e);</span>
+<span class="nc" id="L81">        }</span>
+<span class="nc" id="L82">        return grouped;</span>
     }
 
     /**
-     * Liczy, ilu pracownikĂłw jest na kaĹĽdym stanowisku.
+     * Liczy, ilu pracowników jest na każdym stanowisku.
      */
     public Map&lt;Position, Integer&gt; countByPosition() {
-<span class="fc" id="L89">        Map&lt;Position, Integer&gt; counts = new HashMap&lt;&gt;();</span>
-<span class="fc bfc" id="L90" title="All 2 branches covered.">        for (Employee e : employees) {</span>
-<span class="fc" id="L91">            Position pos = e.getPosition();</span>
-            // UĹĽywamy getOrDefault, ĹĽeby kod byĹ‚ krĂłtszy
-<span class="fc" id="L93">            counts.put(pos, counts.getOrDefault(pos, 0) + 1);</span>
-<span class="fc" id="L94">        }</span>
-<span class="fc" id="L95">        return counts;</span>
+<span class="nc" id="L89">        Map&lt;Position, Integer&gt; counts = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        for (Employee e : employees) {</span>
+<span class="nc" id="L91">            Position pos = e.getPosition();</span>
+            // Używamy getOrDefault, żeby kod był krótszy
+<span class="nc" id="L93">            counts.put(pos, counts.getOrDefault(pos, 0) + 1);</span>
+<span class="nc" id="L94">        }</span>
+<span class="nc" id="L95">        return counts;</span>
     }
 
     /**
-     * Oblicza Ĺ›rednie wynagrodzenie wszystkich pracownikĂłw.
+     * Oblicza średnie wynagrodzenie wszystkich pracowników.
      */
     public double averageSalary() {
-<span class="fc bfc" id="L102" title="All 2 branches covered.">        if (employees.isEmpty()) {</span>
-<span class="fc" id="L103">            return 0.0;</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">        if (employees.isEmpty()) {</span>
+<span class="nc" id="L103">            return 0.0;</span>
         }
-<span class="fc" id="L105">        double sum = 0.0;</span>
-<span class="fc bfc" id="L106" title="All 2 branches covered.">        for (Employee e : employees) {</span>
-<span class="fc" id="L107">            sum += e.getSalary();</span>
-<span class="fc" id="L108">        }</span>
-<span class="fc" id="L109">        return sum / employees.size();</span>
+<span class="nc" id="L105">        double sum = 0.0;</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        for (Employee e : employees) {</span>
+<span class="nc" id="L107">            sum += e.getSalary();</span>
+<span class="nc" id="L108">        }</span>
+<span class="nc" id="L109">        return sum / employees.size();</span>
     }
 
     /**
-     * Znajduje pracownika z najwyĹĽszym wynagrodzeniem.
+     * Znajduje pracownika z najwyższym wynagrodzeniem.
      */
     public Employee findHighestSalary() {
-<span class="fc bfc" id="L116" title="All 2 branches covered.">        if (employees.isEmpty()) {</span>
-<span class="fc" id="L117">            return null;</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (employees.isEmpty()) {</span>
+<span class="nc" id="L117">            return null;</span>
         }
-<span class="fc" id="L119">        Employee highest = employees.get(0);</span>
-<span class="fc bfc" id="L120" title="All 2 branches covered.">        for (Employee e : employees) {</span>
-<span class="fc bfc" id="L121" title="All 2 branches covered.">            if (e.getSalary() &gt; highest.getSalary()) {</span>
-<span class="fc" id="L122">                highest = e;</span>
+<span class="nc" id="L119">        Employee highest = employees.get(0);</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        for (Employee e : employees) {</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">            if (e.getSalary() &gt; highest.getSalary()) {</span>
+<span class="nc" id="L122">                highest = e;</span>
             }
-<span class="fc" id="L124">        }</span>
-<span class="fc" id="L125">        return highest;</span>
+<span class="nc" id="L124">        }</span>
+<span class="nc" id="L125">        return highest;</span>
     }
 
     // --- Metody analityczne z zadania 2 (CSV/API) ---
 
     public List&lt;Employee&gt; validateSalaryConsistency() {
-<span class="fc" id="L131">        List&lt;Employee&gt; inconsistentEmployees = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L132" title="All 2 branches covered.">        for (Employee employee : employees) {</span>
-<span class="fc" id="L133">            double baseSalary = employee.getPosition().getBaseSalary();</span>
-<span class="fc bfc" id="L134" title="All 2 branches covered.">            if (employee.getSalary() &lt; baseSalary) {</span>
-<span class="fc" id="L135">                inconsistentEmployees.add(employee);</span>
+<span class="nc" id="L131">        List&lt;Employee&gt; inconsistentEmployees = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        for (Employee employee : employees) {</span>
+<span class="nc" id="L133">            double baseSalary = employee.getPosition().getBaseSalary();</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">            if (employee.getSalary() &lt; baseSalary) {</span>
+<span class="nc" id="L135">                inconsistentEmployees.add(employee);</span>
             }
-<span class="fc" id="L137">        }</span>
-<span class="fc" id="L138">        return inconsistentEmployees;</span>
+<span class="nc" id="L137">        }</span>
+<span class="nc" id="L138">        return inconsistentEmployees;</span>
     }
 
     public Map&lt;String, CompanyStatistics&gt; getCompanyStatistics() {
-<span class="fc" id="L142">        Map&lt;String, List&lt;Employee&gt;&gt; employeesByCompany = new HashMap&lt;&gt;();</span>
-<span class="fc bfc" id="L143" title="All 2 branches covered.">        for (Employee e : employees) {</span>
-<span class="fc" id="L144">            String companyName = e.getCompanyName();</span>
-<span class="fc bfc" id="L145" title="All 2 branches covered.">            if (!employeesByCompany.containsKey(companyName)) {</span>
-<span class="fc" id="L146">                employeesByCompany.put(companyName, new ArrayList&lt;&gt;());</span>
+<span class="nc" id="L142">        Map&lt;String, List&lt;Employee&gt;&gt; employeesByCompany = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">        for (Employee e : employees) {</span>
+<span class="nc" id="L144">            String companyName = e.getCompanyName();</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">            if (!employeesByCompany.containsKey(companyName)) {</span>
+<span class="nc" id="L146">                employeesByCompany.put(companyName, new ArrayList&lt;&gt;());</span>
             }
-<span class="fc" id="L148">            employeesByCompany.get(companyName).add(e);</span>
-<span class="fc" id="L149">        }</span>
+<span class="nc" id="L148">            employeesByCompany.get(companyName).add(e);</span>
+<span class="nc" id="L149">        }</span>
 
-<span class="fc" id="L151">        Map&lt;String, CompanyStatistics&gt; companyStats = new HashMap&lt;&gt;();</span>
-<span class="fc bfc" id="L152" title="All 2 branches covered.">        for (Map.Entry&lt;String, List&lt;Employee&gt;&gt; entry : employeesByCompany.entrySet()) {</span>
-<span class="fc" id="L153">            String companyName = entry.getKey();</span>
-<span class="fc" id="L154">            List&lt;Employee&gt; companyEmployees = entry.getValue();</span>
+<span class="nc" id="L151">        Map&lt;String, CompanyStatistics&gt; companyStats = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">        for (Map.Entry&lt;String, List&lt;Employee&gt;&gt; entry : employeesByCompany.entrySet()) {</span>
+<span class="nc" id="L153">            String companyName = entry.getKey();</span>
+<span class="nc" id="L154">            List&lt;Employee&gt; companyEmployees = entry.getValue();</span>
 
-<span class="fc" id="L156">            int employeeCount = companyEmployees.size();</span>
-<span class="fc" id="L157">            double totalSalary = 0.0;</span>
-<span class="fc" id="L158">            Employee highestEarner = null;</span>
+<span class="nc" id="L156">            int employeeCount = companyEmployees.size();</span>
+<span class="nc" id="L157">            double totalSalary = 0.0;</span>
+<span class="nc" id="L158">            Employee highestEarner = null;</span>
 
-<span class="fc bfc" id="L160" title="All 2 branches covered.">            for (Employee emp : companyEmployees) {</span>
-<span class="fc" id="L161">                totalSalary += emp.getSalary();</span>
-<span class="pc bpc" id="L162" title="1 of 4 branches missed.">                if (highestEarner == null || emp.getSalary() &gt; highestEarner.getSalary()) {</span>
-<span class="fc" id="L163">                    highestEarner = emp;</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">            for (Employee emp : companyEmployees) {</span>
+<span class="nc" id="L161">                totalSalary += emp.getSalary();</span>
+<span class="nc bnc" id="L162" title="All 4 branches missed.">                if (highestEarner == null || emp.getSalary() &gt; highestEarner.getSalary()) {</span>
+<span class="nc" id="L163">                    highestEarner = emp;</span>
                 }
-<span class="fc" id="L165">            }</span>
+<span class="nc" id="L165">            }</span>
 
-<span class="pc bpc" id="L167" title="1 of 2 branches missed.">            double averageSalary = (employeeCount &gt; 0) ? totalSalary / employeeCount : 0.0;</span>
-<span class="pc bpc" id="L168" title="1 of 2 branches missed.">            String earnerName = (highestEarner != null) ? highestEarner.getName() : &quot;N/A&quot;;</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">            double averageSalary = (employeeCount &gt; 0) ? totalSalary / employeeCount : 0.0;</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">            String earnerName = (highestEarner != null) ? highestEarner.getName() : &quot;N/A&quot;;</span>
 
-<span class="fc" id="L170">            CompanyStatistics stats = new CompanyStatistics(employeeCount, averageSalary, earnerName);</span>
-<span class="fc" id="L171">            companyStats.put(companyName, stats);</span>
-<span class="fc" id="L172">        }</span>
-<span class="fc" id="L173">        return companyStats;</span>
+<span class="nc" id="L170">            CompanyStatistics stats = new CompanyStatistics(employeeCount, averageSalary, earnerName);</span>
+<span class="nc" id="L171">            companyStats.put(companyName, stats);</span>
+<span class="nc" id="L172">        }</span>
+<span class="nc" id="L173">        return companyStats;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
