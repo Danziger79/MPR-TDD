@@ -3,17 +3,24 @@
 import model.Employee;
 import model.Position;
 
-
-<span class="fc" id="L7">public class PromotionService {</span>
-
+<span class="fc" id="L6">public class PromotionService {</span>
 
     public void promote(Employee employee, Position newPosition) {
 
-        // Test sprawdza czy stanowisko się zmieniło
-<span class="fc" id="L13">        employee.setPosition(newPosition);</span>
 
-        // Test sprawdza czy pensja to nowa baza
-<span class="fc" id="L16">        employee.setSalary(newPosition.getBaseSalary());</span>
-<span class="fc" id="L17">    }</span>
+<span class="fc" id="L11">        int oldLevel = employee.getPosition().getHierarchyLevel();</span>
+<span class="fc" id="L12">        int newLevel = newPosition.getHierarchyLevel();</span>
+
+
+<span class="pc bpc" id="L15" title="1 of 2 branches missed.">        if (newLevel &gt;= oldLevel) {</span>
+
+<span class="fc" id="L17">            throw new IllegalArgumentException(&quot;Awans musi być na wyższe stanowisko&quot;);</span>
+        }
+
+
+
+<span class="nc" id="L22">        employee.setPosition(newPosition);</span>
+<span class="nc" id="L23">        employee.setSalary(newPosition.getBaseSalary());</span>
+<span class="nc" id="L24">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
