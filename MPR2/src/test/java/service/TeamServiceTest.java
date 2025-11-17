@@ -127,4 +127,24 @@ class TeamServiceTest {
                 .as("Zespół B powinien teraz mieć tego pracownika")
                 .containsExactly(pracownik); // Sprawdza, czy zawiera TYLKO jego
     }
+    @Test
+    @DisplayName("Sprawdzenie różnorodności powinno zwrócić false, jeśli w zespole nie ma Managera")
+    void shouldReturnFalseForTeamWithNoManager() {
+
+        teamService.assignEmployeeToTeam(pracownik, team);
+
+
+        Employee p2 = new Employee("User1", "u1@tech.pl", "Tech", Position.PROGRAMISTA, 8000, LocalDate.now());
+        Employee s1 = new Employee("User2", "u2@tech.pl", "Tech", Position.STAZYSTA, 3000, LocalDate.now());
+        teamService.assignEmployeeToTeam(p2, team);
+        teamService.assignEmployeeToTeam(s1, team);
+
+
+        boolean isCompliant = teamService.isTeamDiversityCompliant(team);
+
+
+        assertThat(isCompliant)
+                .as("Zespół bez Managera nie powinien być 'compliant'")
+                .isFalse();
+    }
 }
