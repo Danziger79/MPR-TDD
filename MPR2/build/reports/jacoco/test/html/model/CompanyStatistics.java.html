@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CompanyStatistics.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MPR2</a> &gt; <a href="index.source.html" class="el_package">model</a> &gt; <span class="el_source">CompanyStatistics.java</span></div><h1>CompanyStatistics.java</h1><pre class="source lang-java linenums">package model;
+
+import java.text.DecimalFormat;
+
+// Kolejny &quot;kontenerek&quot; na dane, tym razem na statystyki firmy.
+public class CompanyStatistics {
+    private int employeeCount;
+    private double averageSalary;
+    private String highestEarnerName; // PeĹ‚ne imiÄ™ i nazwisko
+
+<span class="fc" id="L11">    public CompanyStatistics(int employeeCount, double averageSalary, String highestEarnerName) {</span>
+<span class="fc" id="L12">        this.employeeCount = employeeCount;</span>
+<span class="fc" id="L13">        this.averageSalary = averageSalary;</span>
+<span class="fc" id="L14">        this.highestEarnerName = highestEarnerName;</span>
+<span class="fc" id="L15">    }</span>
+
+    // Gettery (gdybyĹ›my ich potrzebowali)
+<span class="fc" id="L18">    public int getEmployeeCount() { return employeeCount; }</span>
+<span class="fc" id="L19">    public double getAverageSalary() { return averageSalary; }</span>
+<span class="fc" id="L20">    public String getHighestEarnerName() { return highestEarnerName; }</span>
+
+    // Nadpisujemy toString, ĹĽeby fajnie siÄ™ drukowaĹ‚o na konsoli
+    @Override
+    public String toString() {
+        // MaĹ‚y trik na sformatowanie pensji do dwĂłch miejsc po przecinku
+<span class="nc" id="L26">        DecimalFormat df = new DecimalFormat(&quot;#.00&quot;);</span>
+<span class="nc" id="L27">        return &quot;Statystyki firmy: &quot; +</span>
+                &quot;Liczba pracownikĂłw=&quot; + employeeCount +
+<span class="nc" id="L29">                &quot;, Ĺšrednia pensja=&quot; + df.format(averageSalary) + &quot; PLN&quot; +</span>
+                &quot;, Najlepiej zarabiajÄ…cy='&quot; + highestEarnerName + '\'';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

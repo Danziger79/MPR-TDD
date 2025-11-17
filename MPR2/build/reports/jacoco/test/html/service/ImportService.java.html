@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImportService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MPR2</a> &gt; <a href="index.source.html" class="el_package">service</a> &gt; <span class="el_source">ImportService.java</span></div><h1>ImportService.java</h1><pre class="source lang-java linenums">package service;
+
+import exception.InvalidDataException;
+import model.Employee;
+import model.ImportSummary;
+import model.Position;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+// Ten serwis bÄ™dzie odpowiedzialny TYLKO za importowanie.
+public class ImportService {
+
+    // Serwis importujÄ…cy musi wiedzieÄ‡, gdzie dodawaÄ‡ pracownikĂłw,
+    // wiÄ™c przekazujemy mu referencjÄ™ do 'EmployeeService'.
+    private EmployeeService employeeService;
+
+<span class="nc" id="L21">    public ImportService(EmployeeService employeeService) {</span>
+<span class="nc" id="L22">        this.employeeService = employeeService;</span>
+<span class="nc" id="L23">    }</span>
+
+    /**
+     * Wczytuje plik CSV, parsuje go i dodaje pracownikĂłw do EmployeeService.
+     * Zgodnie z zadaniem, uĹĽywamy BufferedReader i split(), zamiast OpenCSV.
+     */
+    public ImportSummary importFromCsv(String filePath) {
+<span class="nc" id="L30">        int importedCount = 0;</span>
+<span class="nc" id="L31">        List&lt;String&gt; errors = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L32">        int lineNumber = 0; // Zaczynamy liczenie linii od 0</span>
+
+        // UĹĽywamy &quot;try-with-resources&quot;, jak na wykĹ‚adzie.
+        // BufferedReader otworzy siÄ™ i ZAMKNIE AUTOMATYCZNIE,
+        // nawet jeĹ›li poleci bĹ‚Ä…d. Super sprawa.
+<span class="nc" id="L37">        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {</span>
+
+<span class="nc" id="L39">            String line = reader.readLine(); // Wczytujemy pierwszÄ… liniÄ™</span>
+<span class="nc" id="L40">            lineNumber++; // JesteĹ›my na linii 1</span>
+
+            // Sprawdzamy, czy to nagĹ‚Ăłwek (i czy plik nie jest pusty)
+<span class="nc bnc" id="L43" title="All 4 branches missed.">            if (line == null || line.isEmpty()) {</span>
+<span class="nc" id="L44">                errors.add(&quot;Plik jest pusty.&quot;);</span>
+<span class="nc" id="L45">                return new ImportSummary(0, errors);</span>
+            }
+
+            // Mamy nagĹ‚Ăłwek, wiÄ™c go pominÄ™liĹ›my. Czytamy resztÄ™ w pÄ™tli.
+<span class="nc bnc" id="L49" title="All 2 branches missed.">            while ((line = reader.readLine()) != null) {</span>
+<span class="nc" id="L50">                lineNumber++; // Przechodzimy do kolejnej linii</span>
+
+                // Pomijamy puste linie (np. ktoĹ› wcisnÄ…Ĺ‚ Enter na koĹ„cu pliku)
+<span class="nc bnc" id="L53" title="All 2 branches missed.">                if (line.trim().isEmpty()) {</span>
+<span class="nc" id="L54">                    continue; // 'continue' przeskakuje do nastÄ™pnej iteracji pÄ™tli</span>
+                }
+
+                // Tutaj parsujemy JEDNÄ„ liniÄ™.
+                // Opakowujemy to w try/catch, ĹĽeby bĹ‚Ä…d w jednej linii
+                // nie zatrzymaĹ‚ nam caĹ‚ego importu.
+                try {
+                    // Dzielimy liniÄ™ po przecinku
+<span class="nc" id="L62">                    String[] data = line.split(&quot;,&quot;);</span>
+
+                    // Walidacja: czy mamy 6 kolumn?
+<span class="nc bnc" id="L65" title="All 2 branches missed.">                    if (data.length != 6) {</span>
+                        // Rzucamy wĹ‚asny wyjÄ…tek, ktĂłry zĹ‚apiemy poniĹĽej
+<span class="nc" id="L67">                        throw new InvalidDataException(&quot;Niepoprawna liczba kolumn (oczekiwano 6, jest &quot; + data.length + &quot;)&quot;);</span>
+                    }
+
+                    // WyciÄ…gamy dane i 'trim()'ujemy (usuwamy biaĹ‚e znaki z poczÄ…tku/koĹ„ca)
+<span class="nc" id="L71">                    String firstName = data[0].trim();</span>
+<span class="nc" id="L72">                    String lastName = data[1].trim();</span>
+<span class="nc" id="L73">                    String email = data[2].trim();</span>
+<span class="nc" id="L74">                    String company = data[3].trim();</span>
+<span class="nc" id="L75">                    String positionStr = data[4].trim().toUpperCase(); // Od razu do duĹĽych liter</span>
+<span class="nc" id="L76">                    String salaryStr = data[5].trim();</span>
+
+                    // Walidacja 1: Stanowisko (Position)
+                    Position position;
+                    try {
+                        // Position.valueOf() rzuci bĹ‚Ä™dem, jeĹ›li nie znajdzie
+                        // stanowiska w enumie. To nam pasuje.
+<span class="nc" id="L83">                        position = Position.valueOf(positionStr);</span>
+<span class="nc" id="L84">                    } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L85">                        throw new InvalidDataException(&quot;Nieznane stanowisko: '&quot; + data[4].trim() + &quot;'&quot;);</span>
+<span class="nc" id="L86">                    }</span>
+
+                    // Walidacja 2: Pensja (Salary)
+                    double salary;
+                    try {
+<span class="nc" id="L91">                        salary = Double.parseDouble(salaryStr);</span>
+<span class="nc" id="L92">                    } catch (NumberFormatException e) {</span>
+<span class="nc" id="L93">                        throw new InvalidDataException(&quot;Niepoprawny format pensji: '&quot; + salaryStr + &quot;'&quot;);</span>
+<span class="nc" id="L94">                    }</span>
+
+<span class="nc bnc" id="L96" title="All 2 branches missed.">                    if (salary &lt;= 0) {</span>
+<span class="nc" id="L97">                        throw new InvalidDataException(&quot;Pensja musi byÄ‡ dodatnia (jest &quot; + salary + &quot;)&quot;);</span>
+                    }
+
+                    // JeĹ›li wszystko poszĹ‚o OK, tworzymy pracownika
+<span class="nc" id="L101">                    String fullName = firstName + &quot; &quot; + lastName;</span>
+<span class="nc" id="L102">                    Employee employee = new Employee(fullName, email, company, position, salary);</span>
+
+                    // I prĂłbujemy go dodaÄ‡ do serwisu
+<span class="nc bnc" id="L105" title="All 2 branches missed.">                    if (employeeService.addEmployee(employee)) {</span>
+<span class="nc" id="L106">                        importedCount++; // UdaĹ‚o siÄ™!</span>
+                    } else {
+                        // Serwis zwrĂłciĹ‚ 'false', co oznacza, ĹĽe email juĹĽ byĹ‚
+<span class="nc" id="L109">                        errors.add(&quot;Linia &quot; + lineNumber + &quot;: Pracownik z emailem '&quot; + email + &quot;' juĹĽ istnieje.&quot;);</span>
+                    }
+
+<span class="nc" id="L112">                } catch (InvalidDataException | IllegalArgumentException e) {</span>
+                    // Ĺ�apiemy bĹ‚Ä™dy walidacji dla tej JEDNEJ linii
+<span class="nc" id="L114">                    errors.add(&quot;Linia &quot; + lineNumber + &quot;: BĹ‚Ä…d danych -&gt; &quot; + e.getMessage());</span>
+<span class="nc" id="L115">                }</span>
+                // ... i pÄ™tla leci dalej, do nastÄ™pnej linii!
+            }
+
+<span class="nc" id="L119">        } catch (IOException e) {</span>
+            // Ten catch jest dla 'BufferedReader'
+            // Jakikolwiek bĹ‚Ä…d odczytu pliku (np. nie ma pliku)
+<span class="nc" id="L122">            errors.add(&quot;Krytyczny bĹ‚Ä…d odczytu pliku: &quot; + e.getMessage());</span>
+<span class="nc" id="L123">        }</span>
+
+        // Zwracamy nasz &quot;raport&quot; z importu
+<span class="nc" id="L126">        return new ImportSummary(importedCount, errors);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

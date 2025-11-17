@@ -1,0 +1,10 @@
+firstName,lastName,email,company,position,salary
+Marek,Nowicki,marek@infotech.pl,InfoTech,MANAGER,13000
+Zofia,Kowal,zofia@infotech.pl,InfoTech,PROGRAMISTA,7500
+Tomasz,Lis,tomasz@speedsoft.pl,SpeedSoft,STAZYSTA,3500
+
+Alicja,Bąk,alicja@speedsoft.pl,SpeedSoft,PROGRAMISTA,9000
+BlednyWiersz,o,zla,ilosc,kolumn
+Krzysztof,Zalewski,krzys@infotech.pl,InfoTech,KIEROWCA,5000
+Jan,Niezbedny,jan@speedsoft.pl,SpeedSoft,STAZYSTA,-100
+Anna,Wazna,anna@infotech.pl,InfoTech,WICEPREZES,15000

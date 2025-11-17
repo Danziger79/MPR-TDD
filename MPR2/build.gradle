@@ -1,0 +1,60 @@
+// Mamy tu pluginy z obu wersji: java, application ORAZ jacoco
+plugins {
+    id 'java'
+    id 'application'
+    id 'jacoco' // <-- Dodany plugin do raportów pokrycia
+}
+
+// Ustawiamy, która klasa ma metodę main (zostaje bez zmian)
+application {
+    mainClass = 'Main'
+}
+
+// Nazwa naszej grupy i wersja (zostaje bez zmian)
+group = 'com.bootcamp'
+version = '1.0.0'
+
+// Używamy Javy 11 (zostaje bez zmian)
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+// Repozytoria (zostają bez zmian)
+repositories {
+    mavenCentral()
+}
+
+// Sekcja zależności została POŁĄCZONA
+dependencies {
+    // Nasza stara zależność do JSONa
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // --- NOWA ZALEŻNOŚĆ TESTOWA ---
+    // To jest JUnit 5. Zwróć uwagę na 'testImplementation'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+}
+
+// --- NOWA KONFIGURACJA TESTÓW ---
+// Ten blok jest potrzebny, żeby Gradle odpalał testy JUnit 5
+// i automatycznie generował raport JaCoCo
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+// --- NOWA KONFIGURACJA JaCoCo ---
+// Mówimy, że chcemy raport HTML
+jacocoTestReport {
+    dependsOn test
+    reports {
+        html.required = true  // Chcemy ten fajny raport HTML
+        xml.required = false
+        csv.required = false
+    }
+}
+
+// Ustawiamy kodowanie na UTF-8 (zostaje bez zmian)
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
