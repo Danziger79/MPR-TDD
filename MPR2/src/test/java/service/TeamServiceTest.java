@@ -52,4 +52,24 @@ class TeamServiceTest {
                 .hasSize(1)
                 .contains(pracownik);
     }
+    @Test
+    @DisplayName("Próba dodania pracownika, który jest już w zespole, powinna rzucić wyjątek")
+    void shouldThrowExceptionWhenEmployeeAlreadyInATeam() {
+
+        teamService.assignEmployeeToTeam(pracownik, team);
+
+
+        ProjectTeam teamB = new ProjectTeam("Projekt Goryl");
+
+
+        // Sprawdzamy, czy próba dodania do DRUGIEGO zespołu rzuci błędem
+        assertThatIllegalStateException() // Chcemy konkretny typ błędu
+                .isThrownBy(() -> {
+                    // Ta linijka powinna rzucić błędem
+                    teamService.assignEmployeeToTeam(pracownik, teamB);
+                })
+                .withMessageContaining("Pracownik jest już w innym zespole");
+    }
+
+
 }
