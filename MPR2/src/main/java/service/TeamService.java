@@ -1,11 +1,10 @@
 package service;
 
 import model.Employee;
-import model.Position; 
+import model.Position;
 import model.ProjectTeam;
 
 public class TeamService {
-
 
 
     public void assignEmployeeToTeam(Employee employee, ProjectTeam team) {
@@ -64,3 +63,4 @@ public class TeamService {
         return false;
     }
 }
+//nic
