@@ -95,7 +95,7 @@ class TeamServiceTest {
 
         assertThatIllegalStateException()
                 .isThrownBy(() -> {
-               
+
                     teamService.assignEmployeeToTeam(e6_niezmesciSie, team);
                 })
                 .withMessageContaining("Zespół jest już pełny");
