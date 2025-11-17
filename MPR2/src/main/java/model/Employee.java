@@ -14,9 +14,10 @@ public class Employee {
     private double salary;
 
     private List<Integer> ratingHistory = new ArrayList<>();
-
-
     private LocalDate dateOfHire;
+
+
+    private ProjectTeam currentTeam = null;
 
 
 
@@ -43,10 +44,21 @@ public class Employee {
     public String getCompanyName() { return companyName; }
     public Position getPosition() { return position; }
     public double getSalary() { return salary; }
+    public LocalDate getDateOfHire() { return dateOfHire; }
 
 
-    public LocalDate getDateOfHire() {
-        return dateOfHire;
+    public ProjectTeam getCurrentTeam() {
+        return currentTeam;
+    }
+
+
+    public void setCurrentTeam(ProjectTeam currentTeam) {
+        this.currentTeam = currentTeam;
+    }
+
+
+    public void leaveCurrentTeam() {
+        this.currentTeam = null;
     }
 
 
@@ -70,7 +82,7 @@ public class Employee {
         this.ratingHistory.add(rating);
     }
 
-
+   
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
