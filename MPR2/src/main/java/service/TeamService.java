@@ -8,34 +8,48 @@ public class TeamService {
 
     public void assignEmployeeToTeam(Employee employee, ProjectTeam team) {
 
-
         if (employee.getCurrentTeam() != null) {
             throw new IllegalStateException("Pracownik jest już w innym zespole ("
                     + employee.getCurrentTeam().getTeamName() + ")");
         }
 
 
-        int currentSize = team.getMembers().size();
-        if (currentSize >= team.getMaxTeamSize()) {
-
+        if (team.getMembers().size() >= team.getMaxTeamSize()) {
             throw new IllegalStateException("Zespół jest już pełny (Max: "
                     + team.getMaxTeamSize() + ")");
         }
 
-        employee.setCurrentTeam(team);
-        team.addMember(employee);
+
+        forceAssign(employee, team);
     }
+
+
     public void transferEmployee(Employee employee, ProjectTeam newTeam) {
 
-        ProjectTeam oldTeam = employee.getCurrentTeam();
-
-
-        if (oldTeam != null) {
-            oldTeam.removeMember(employee); // Używamy metody z modelu
+        if (newTeam.getMembers().size() >= newTeam.getMaxTeamSize()) {
+            throw new IllegalStateException("Nowy zespół jest już pełny (Max: "
+                    + newTeam.getMaxTeamSize() + ")");
         }
 
 
-        employee.setCurrentTeam(newTeam);
-        newTeam.addMember(employee);
+        if (employee.getCurrentTeam() != null) {
+            forceRemove(employee, employee.getCurrentTeam());
+        }
+
+
+        forceAssign(employee, newTeam);
+    }
+
+
+
+    private void forceRemove(Employee employee, ProjectTeam team) {
+        team.removeMember(employee);
+        employee.leaveCurrentTeam();
+    }
+
+
+    private void forceAssign(Employee employee, ProjectTeam team) {
+        employee.setCurrentTeam(team);
+        team.addMember(employee);
     }
 }
