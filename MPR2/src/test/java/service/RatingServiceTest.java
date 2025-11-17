@@ -59,4 +59,18 @@ class RatingServiceTest {
                 .as("Średnia ocen jest niepoprawna")
                 .isEqualTo(4.0); // Asercja AssertJ
 }
+    @Test
+    @DisplayName("Obliczanie średniej dla pracownika bez ocen powinno zwrócić 0.0")
+    void shouldReturnZeroAverageForEmployeeWithNoRatings() {
+        // Arrange
+
+
+        // Act
+
+        double average = ratingService.getAverageRating(pracownik);
+
+        assertThat(average)
+                .as("Średnia dla braku ocen powinna wynosić 0.0")
+                .isEqualTo(0.0);
+    }
 }
