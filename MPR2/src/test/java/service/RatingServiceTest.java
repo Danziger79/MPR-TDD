@@ -39,4 +39,24 @@ class RatingServiceTest {
                 .hasSize(1)     // Sprawdzamy, czy ma 1 element
                 .contains(4);   // Sprawdzamy, czy ten element to 4
     }
+    @Test
+    @DisplayName("Obliczanie średniej oceny powinno zwrócić poprawną wartość")
+    void shouldCalculateAverageRatingCorrectly() {
+        // Arrange
+
+
+        pracownik.addRating(3);
+        pracownik.addRating(4);
+        pracownik.addRating(5);
+        // Oczekiwana średnia: (3+4+5) / 3 = 4.0
+
+        // Act
+        // Ta metoda jeszcze nie istnieje! Spowoduje błąd kompilacji.
+        double average = ratingService.getAverageRating(pracownik);
+
+        // Assert (Używamy AssertJ)
+        assertThat(average)
+                .as("Średnia ocen jest niepoprawna")
+                .isEqualTo(4.0); // Asercja AssertJ
+}
 }
