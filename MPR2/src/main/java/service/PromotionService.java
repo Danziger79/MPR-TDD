@@ -22,4 +22,12 @@ public class PromotionService {
         employee.setPosition(newPosition);
         employee.setSalary(newPosition.getBaseSalary());
     }
+
+    public void giveRaise(Employee employee, double percentage) {
+        double currentSalary = employee.getSalary();
+        double raiseAmount = currentSalary * (percentage / 100.0);
+        double newSalary = currentSalary + raiseAmount;
+
+        employee.setSalary(newSalary);
+    }
 }
