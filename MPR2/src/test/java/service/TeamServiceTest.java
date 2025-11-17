@@ -100,5 +100,31 @@ class TeamServiceTest {
                 })
                 .withMessageContaining("Zespół jest już pełny");
     }
-}
+    @Test
+    @DisplayName("Przeniesienie pracownika powinno usunąć go ze starego zespołu i dodać do nowego")
+    void shouldTransferEmployeeBetweenTeams() {
+
+        teamService.assignEmployeeToTeam(pracownik, team);
+
+
+        ProjectTeam teamB = new ProjectTeam("Projekt Goryl");
+
+
+        teamService.transferEmployee(pracownik, teamB);
+
+
+        assertThat(pracownik.getCurrentTeam())
+                .as("Pracownik powinien być teraz w Zespole B")
+                .isSameAs(teamB);
+
+
+        assertThat(team.getMembers())
+                .as("Zespół A nie powinien już mieć tego pracownika")
+                .isEmpty();
+
+
+        assertThat(teamB.getMembers())
+                .as("Zespół B powinien teraz mieć tego pracownika")
+                .containsExactly(pracownik); // Sprawdza, czy zawiera TYLKO jego
+    }
 }
