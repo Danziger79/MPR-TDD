@@ -147,4 +147,24 @@ class TeamServiceTest {
                 .as("Zespół bez Managera nie powinien być 'compliant'")
                 .isFalse();
     }
+    @Test
+    @DisplayName("Sprawdzenie różnorodności powinno zwrócić true, jeśli w zespole jest Manager")
+    void shouldReturnTrueForTeamWithManager() {
+
+        teamService.assignEmployeeToTeam(pracownik, team);
+
+
+        Employee manager = new Employee("Szef Szefów", "szef@tech.pl", "Tech", Position.MANAGER, 15000, LocalDate.now());
+
+
+        teamService.assignEmployeeToTeam(manager, team);
+
+
+        boolean isCompliant = teamService.isTeamDiversityCompliant(team);
+
+
+        assertThat(isCompliant)
+                .as("Zespół z Managerem powinien być 'compliant'")
+                .isTrue();
+    }
 }
