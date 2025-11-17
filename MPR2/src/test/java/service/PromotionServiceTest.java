@@ -13,33 +13,38 @@ class PromotionServiceTest {
 
     private PromotionService promotionService;
     private Employee stazysta;
+    private Employee manager; // <-- DODAJ TO POLE
 
     @BeforeEach
     void setUp() {
-        // Jeszcze nie ma tej klasy
         promotionService = new PromotionService();
         stazysta = new Employee("Jan Stażysta", "jan@tech.pl", "TechCorp",
                 Position.STAZYSTA, 3500);
+        // DODAJ INICJALIZACJĘ MANAGERA
+        manager = new Employee("Anna Manager", "anna@tech.pl", "TechCorp",
+                Position.MANAGER, 13000);
     }
 
+
     @Test
-    @DisplayName("Awans ze Stażysty na Programistę powinien ustawić nowe stanowisko i bazową pensję")
-    void shouldPromoteEmployeeAndSetBaseSalary() {
-        // Arrange (mamy w setup)
+    @DisplayName("Awans na to samo lub niższe stanowisko powinien rzucić wyjątek")
+    void shouldThrowExceptionWhenPromotingToSameOrLowerRank() {
+        // Assert (AssertJ do sprawdzania wyjątków)
 
-        // Act
-        // Ta metoda jeszcze nie istnieje
-        promotionService.promote(stazysta, Position.PROGRAMISTA);
+        // Scenariusz 1: To samo stanowisko
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> {
+                    // blad
+                    promotionService.promote(stazysta, Position.STAZYSTA);
+                })
 
-        // Assert (Używamy AssertJ)
+                .withMessageContaining("Awans musi być na wyższe stanowisko");
 
-
-        assertThat(stazysta.getPosition())
-                .as("Sprawdzenie, czy stanowisko się zmieniło")
-                .isSameAs(Position.PROGRAMISTA); // Asercja AssertJ
-
-        assertThat(stazysta.getSalary())
-                .as("Sprawdzenie, czy pensja to nowa baza")
-                .isEqualTo(Position.PROGRAMISTA.getBaseSalary()); // Asercja AssertJ
+        // Scenariusz 2: Niższe stanowisko (z Managera na Programistę)
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> {
+                    promotionService.promote(manager, Position.PROGRAMISTA);
+                })
+                .withMessageContaining("Awans musi być na wyższe stanowisko");
     }
 }
