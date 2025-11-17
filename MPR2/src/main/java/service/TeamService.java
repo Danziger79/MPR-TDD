@@ -25,4 +25,17 @@ public class TeamService {
         employee.setCurrentTeam(team);
         team.addMember(employee);
     }
+    public void transferEmployee(Employee employee, ProjectTeam newTeam) {
+
+        ProjectTeam oldTeam = employee.getCurrentTeam();
+
+
+        if (oldTeam != null) {
+            oldTeam.removeMember(employee); // Używamy metody z modelu
+        }
+
+
+        employee.setCurrentTeam(newTeam);
+        newTeam.addMember(employee);
+    }
 }
