@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList; 
+import java.util.List;
 import java.util.Objects;
 
 
@@ -10,14 +12,16 @@ public class Employee {
     private Position position;
     private double salary;
 
+    private List<Integer> ratingHistory = new ArrayList<>();
+
 
     public Employee(String name, String email, String companyName, Position position, double salary) {
-
         this.name = name;
         this.email = email;
         this.companyName = companyName;
         this.position = position;
         this.salary = salary;
+
     }
 
 
@@ -35,6 +39,31 @@ public class Employee {
     public void setPosition(Position position) {
         this.position = position;
     }
+
+
+
+    /**
+     * Zwraca *kopię* listy ocen, aby nikt z zewnątrz
+     * nie mógł jej bezpośrednio modyfikować.
+     */
+    public List<Integer> getRatingHistory() {
+        // Zwracamy kopię dla bezpieczeństwa (enkapsulacja)
+        return new ArrayList<>(ratingHistory);
+    }
+
+    /**
+     * Dodaje nową ocenę do historii pracownika.
+
+     */
+    public void addRating(int rating) {
+        // Prosta walidacja, żeby trzymać się skali 1-5
+        if (rating < 1 || rating > 5) {
+            throw new IllegalArgumentException("Ocena musi być w skali 1-5");
+        }
+        this.ratingHistory.add(rating);
+    }
+
+
 
     @Override
     public boolean equals(Object o) {
