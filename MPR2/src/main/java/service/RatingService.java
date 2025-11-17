@@ -15,7 +15,10 @@ public class RatingService {
 
         List<Integer> ratings = employee.getRatingHistory();
 
-
+        if (ratings.isEmpty()) {
+            return 0.0; // Test oczekiwał 0.0
+        }
+        
         double sum = 0;
         for (int rating : ratings) {
             sum += rating;
