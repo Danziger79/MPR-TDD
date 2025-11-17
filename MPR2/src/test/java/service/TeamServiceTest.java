@@ -71,5 +71,34 @@ class TeamServiceTest {
                 .withMessageContaining("Pracownik jest już w innym zespole");
     }
 
+    @Test
+    @DisplayName("Próba dodania pracownika do pełnego zespołu powinna rzucić wyjątek")
+    void shouldThrowExceptionWhenTeamIsFull() {
 
+        Employee e1 = new Employee("User1", "u1@tech.pl", "Tech", Position.STAZYSTA, 3000, LocalDate.now());
+        Employee e2 = new Employee("User2", "u2@tech.pl", "Tech", Position.STAZYSTA, 3000, LocalDate.now());
+        Employee e3 = new Employee("User3", "u3@tech.pl", "Tech", Position.STAZYSTA, 3000, LocalDate.now());
+        Employee e4 = new Employee("User4", "u4@tech.pl", "Tech", Position.STAZYSTA, 3000, LocalDate.now());
+
+
+        teamService.assignEmployeeToTeam(e1, team);
+        teamService.assignEmployeeToTeam(e2, team);
+        teamService.assignEmployeeToTeam(e3, team);
+        teamService.assignEmployeeToTeam(e4, team);
+
+
+        teamService.assignEmployeeToTeam(pracownik, team);
+
+
+        Employee e6_niezmesciSie = new Employee("User6", "u6@tech.pl", "Tech", Position.STAZYSTA, 3000, LocalDate.now());
+
+
+        assertThatIllegalStateException()
+                .isThrownBy(() -> {
+               
+                    teamService.assignEmployeeToTeam(e6_niezmesciSie, team);
+                })
+                .withMessageContaining("Zespół jest już pełny");
+    }
+}
 }
