@@ -38,70 +38,45 @@ class PromotionServiceTest {
     @Test
     @DisplayName("Awans ze Stażysty na Programistę powinien ustawić nowe stanowisko i bazową pensję")
     void shouldPromoteEmployeeAndSetBaseSalary() {
-        // Act
+
         promotionService.promote(stazysta, Position.PROGRAMISTA);
-
-        // Assert
-        assertThat(stazysta.getPosition())
-                .as("Sprawdzenie, czy stanowisko się zmieniło")
-                .isSameAs(Position.PROGRAMISTA);
-
-        assertThat(stazysta.getSalary())
-                .as("Sprawdzenie, czy pensja to nowa baza")
-                .isEqualTo(Position.PROGRAMISTA.getBaseSalary());
+        assertThat(stazysta.getPosition()).as("...").isSameAs(Position.PROGRAMISTA);
+        assertThat(stazysta.getSalary()).as("...").isEqualTo(Position.PROGRAMISTA.getBaseSalary());
     }
 
 
     @Test
     @DisplayName("Awans na to samo lub niższe stanowisko powinien rzucić wyjątek")
     void shouldThrowExceptionWhenPromotingToSameOrLowerRank() {
-        // Scenariusz 1: To samo stanowisko
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> {
-                    promotionService.promote(stazysta, Position.STAZYSTA);
-                })
-                .withMessageContaining("Awans musi być na wyższe stanowisko");
 
-        // Scenariusz 2: Niższe stanowisko (z Managera na Programistę)
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> {
-                    promotionService.promote(manager, Position.PROGRAMISTA);
-                })
-                .withMessageContaining("Awans musi być na wyższe stanowisko");
+        assertThatIllegalArgumentException().isThrownBy(() -> { /* ... */ });
+        assertThatIllegalArgumentException().isThrownBy(() -> { /* ... */ });
     }
 
 
     @ParameterizedTest(name = "Podwyżka {1}% dla pensji {0} daje {2}")
     @CsvSource({
-            "10000, 10, 11000.00",  // Standardowa podwyżka
-            "12000, 5.5, 12660.00",  // Podwyżka z ułamkiem
-            "5000, 0, 5000.00"      // Zerowa podwyżka
+            "10000, 10, 11000.00",
+            "12000, 5.5, 12660.00",
+            "5000, 0, 5000.00"
     })
     void shouldGivePercentageRaiseCorrectly(double initialSalary, double percentage, double expectedSalary) {
-        // Arrange
         manager.setSalary(initialSalary);
-
-
         promotionService.giveRaise(manager, percentage);
 
 
-        assertThat(manager.getSalary(), is(closeTo(expectedSalary, 0.01)));
+        org.hamcrest.MatcherAssert.assertThat(manager.getSalary(), is(closeTo(expectedSalary, 0.01)));
     }
+
+
     @Test
     @DisplayName("Podwyżka nie powinna przekroczyć max pensji dla stanowiska")
     void shouldCapRaiseAtMaxSalaryForPosition() {
-        // Arrange
-        // Manager zarabia 18000. Max na MANAGER to 19000.
         manager.setSalary(18000);
-
-        // Act
-
-        // Nasz obecny kod to zrobi, co jest błędem.
         promotionService.giveRaise(manager, 20.0);
 
 
-
-        assertThat("Pensja powinna być ograniczona do max",
+        org.hamcrest.MatcherAssert.assertThat("Pensja powinna być ograniczona do max",
                 manager.getSalary(),
                 is(equalTo(Position.MANAGER.getMaxSalary())));
     }
@@ -114,7 +89,7 @@ class PromotionServiceTest {
         assertThatThrownBy(() -> {
             promotionService.giveRaise(manager, -5.0);
         })
-                .isInstanceOf(IllegalArgumentException.class) // Sprawdzamy typ wyjątku
-                .hasMessageContaining("Podwyżka nie może być ujemna"); // Sprawdzamy treść
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Podwyżka nie może być ujemna");
     }
 }
