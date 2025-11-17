@@ -1,12 +1,7 @@
 # Projekt TDD - System Zarządzania Pracownikami
 
-Ten projekt jest realizacją zadania z bootcampu Javy, polegającego na rozbudowie systemu zarządzania pracownikami przy użyciu metodologii **Test-Driven Development (TDD)**.
-
-Wszystkie nowe funkcjonalności zostały zaimplementowane zgodnie z cyklem **RED-GREEN-REFACTOR**, a testy jednostkowe zostały napisane przy użyciu JUnit 5, AssertJ i Hamcrest.
-
 ## Opis Procesu TDD (Moduł 1: Awanse i Podwyżki)
 
-Jako przykład, oto jak przebiegał proces TDD dla implementacji modułu awansów.
 
 ### Krok 0: Setup
 Zanim rozpoczęto TDD, modele zostały przygotowane do obsługi nowej logiki:
