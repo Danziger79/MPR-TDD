@@ -2,15 +2,16 @@ package service;
 
 import model.Employee;
 import model.Position;
-import model.ProjectTeam; // <-- NOWY IMPORT
+import model.ProjectTeam;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-// Użyjemy AssertJ do sprawdzenia (wymóg zadania)
+
 import static org.assertj.core.api.Assertions.*;
+import static org.hamcrest.Matchers.*;
 
 class TeamServiceTest {
 
@@ -166,5 +167,29 @@ class TeamServiceTest {
         assertThat(isCompliant)
                 .as("Zespół z Managerem powinien być 'compliant'")
                 .isTrue();
+    }
+    @Test
+    @DisplayName("Hamcrest: Sprawdzenie właściwości zespołu i pracownika")
+    void hamcrestMatchersShowcaseTest() {
+
+        teamService.assignEmployeeToTeam(pracownik, team);
+
+
+
+        org.hamcrest.MatcherAssert.assertThat(pracownik.getCurrentTeam(), is(notNullValue()));
+
+
+        org.hamcrest.MatcherAssert.assertThat(pracownik.getCurrentTeam(),
+                hasProperty("teamName", startsWith("Projekt")));
+
+
+        org.hamcrest.MatcherAssert.assertThat(team.getMembers(), hasSize(1));
+
+
+        org.hamcrest.MatcherAssert.assertThat(team.getMembers(), hasItem(pracownik));
+
+
+        org.hamcrest.MatcherAssert.assertThat(pracownik.getSalary(),
+                is(allOf(greaterThan(8000.0), lessThan(10000.0)))); // 10: greaterThan, 11: lessThan
     }
 }

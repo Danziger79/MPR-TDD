@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
+import org.junit.jupiter.params.provider.EnumSource;
 
 
 import static org.hamcrest.Matchers.*;
@@ -91,5 +91,15 @@ class PromotionServiceTest {
         })
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Podwyżka nie może być ujemna");
+    }
+    @ParameterizedTest(name = "Awans z Managera na {0} (niższy) powinien być zablokowany")
+    @EnumSource(value = Position.class, names = {"MANAGER", "PROGRAMISTA", "STAZYSTA"})
+    void shouldBlockPromotionToLowerOrSameRanks(Position lowerOrSamePosition) {
+      
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> {
+                    promotionService.promote(manager, lowerOrSamePosition);
+                })
+                .withMessageContaining("Awans musi być na wyższe stanowisko");
     }
 }
