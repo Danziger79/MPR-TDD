@@ -7,7 +7,7 @@ public enum Position {
     WICEPREZES(18000, 28000, 2),
     MANAGER(12000, 19000, 3),
     PROGRAMISTA(8000, 14000, 4),
-    STAZYSTA(3000, 5000, 5); 
+    STAZYSTA(3000, 5000, 5);
 
     private final double baseSalary;
     private final double maxSalary;

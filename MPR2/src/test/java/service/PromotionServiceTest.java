@@ -87,4 +87,34 @@ class PromotionServiceTest {
 
         assertThat(manager.getSalary(), is(closeTo(expectedSalary, 0.01)));
     }
+    @Test
+    @DisplayName("Podwyżka nie powinna przekroczyć max pensji dla stanowiska")
+    void shouldCapRaiseAtMaxSalaryForPosition() {
+        // Arrange
+        // Manager zarabia 18000. Max na MANAGER to 19000.
+        manager.setSalary(18000);
+
+        // Act
+
+        // Nasz obecny kod to zrobi, co jest błędem.
+        promotionService.giveRaise(manager, 20.0);
+
+
+
+        assertThat("Pensja powinna być ograniczona do max",
+                manager.getSalary(),
+                is(equalTo(Position.MANAGER.getMaxSalary())));
+    }
+
+
+    @Test
+    @DisplayName("Podwyżka ujemna powinna rzucić wyjątek")
+    void shouldThrowExceptionForNegativeRaise() {
+
+        assertThatThrownBy(() -> {
+            promotionService.giveRaise(manager, -5.0);
+        })
+                .isInstanceOf(IllegalArgumentException.class) // Sprawdzamy typ wyjątku
+                .hasMessageContaining("Podwyżka nie może być ujemna"); // Sprawdzamy treść
+    }
 }
