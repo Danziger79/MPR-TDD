@@ -46,7 +46,7 @@ class TeamServiceTest {
                 .isNotNull()
                 .isSameAs(team); // Sprawdzamy, czy to TEN SAM obiekt zespołu
 
-       
+
         assertThat(team.getMembers())
                 .as("Lista członków zespołu powinna zawierać pracownika")
                 .hasSize(1)
