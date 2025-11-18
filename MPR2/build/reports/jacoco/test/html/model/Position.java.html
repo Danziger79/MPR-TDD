@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Position.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MPR2</a> &gt; <a href="index.source.html" class="el_package">model</a> &gt; <span class="el_source">Position.java</span></div><h1>Position.java</h1><pre class="source lang-java linenums">package model;
 
-// Dodajemy 'maxSalary' i zmieniamy 'hierarchyLevel' na bardziej logiczny
-<span class="fc" id="L4">public enum Position {</span>
-    // PREZES(baza, max, hierarchia) - im niższa liczba, tym wyżej
-<span class="fc" id="L6">    PREZES(25000, 40000, 1),</span>
-<span class="fc" id="L7">    WICEPREZES(18000, 28000, 2),</span>
-<span class="fc" id="L8">    MANAGER(12000, 19000, 3),</span>
-<span class="fc" id="L9">    PROGRAMISTA(8000, 14000, 4),</span>
-<span class="fc" id="L10">    STAZYSTA(3000, 5000, 5); // Stażysta ma najniższy poziom (najwyższą liczbę)</span>
+// Typ wyliczeniowy definiujący dostępne stanowiska w strukturze organizacyjnej firmy.
+// Każdy element enum kapsułkuje reguły biznesowe dotyczące widełek płacowych oraz poziomu hierarchii służbowej dla danej roli.
+<span class="fc" id="L5">public enum Position {</span>
 
+<span class="fc" id="L7">    PREZES(25000, 40000, 1),</span>
+<span class="fc" id="L8">    WICEPREZES(18000, 28000, 2),</span>
+<span class="fc" id="L9">    MANAGER(12000, 19000, 3),</span>
+<span class="fc" id="L10">    PROGRAMISTA(8000, 14000, 4),</span>
+<span class="fc" id="L11">    STAZYSTA(3000, 5000, 5);</span>
+
+    // Dolny próg wynagrodzenia dla danego stanowiska.
     private final double baseSalary;
+    // Górny limit wynagrodzenia dla danego stanowiska.
     private final double maxSalary;
+    // Numeryczna reprezentacja poziomu w strukturze firmy (gdzie 1 oznacza najwyższy szczebel zarządczy).
     private final int hierarchyLevel;
 
-<span class="fc" id="L16">    Position(double baseSalary, double maxSalary, int hierarchyLevel) {</span>
-<span class="fc" id="L17">        this.baseSalary = baseSalary;</span>
-<span class="fc" id="L18">        this.maxSalary = maxSalary;</span>
-<span class="fc" id="L19">        this.hierarchyLevel = hierarchyLevel;</span>
-<span class="fc" id="L20">    }</span>
+    // Prywatny konstruktor inicjalizujący parametry konfiguracyjne dla poszczególnych stałych wyliczeniowych.
+<span class="fc" id="L21">    Position(double baseSalary, double maxSalary, int hierarchyLevel) {</span>
+<span class="fc" id="L22">        this.baseSalary = baseSalary;</span>
+<span class="fc" id="L23">        this.maxSalary = maxSalary;</span>
+<span class="fc" id="L24">        this.hierarchyLevel = hierarchyLevel;</span>
+<span class="fc" id="L25">    }</span>
 
-    // Gettery
-<span class="nc" id="L23">    public double getBaseSalary() { return baseSalary; }</span>
-<span class="nc" id="L24">    public double getMaxSalary() { return maxSalary; }</span>
-<span class="fc" id="L25">    public int getHierarchyLevel() { return hierarchyLevel; }</span>
+<span class="fc" id="L27">    public double getBaseSalary() { return baseSalary; }</span>
+<span class="fc" id="L28">    public double getMaxSalary() { return maxSalary; }</span>
+<span class="fc" id="L29">    public int getHierarchyLevel() { return hierarchyLevel; }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

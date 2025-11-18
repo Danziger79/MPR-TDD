@@ -2,30 +2,35 @@
 
 import java.util.List;
 
-// Ta klasa to taki &quot;raport&quot; z importu CSV.
-// Mówi, ile się udało, a co poszło nie tak.
+// Klasa typu DTO (Data Transfer Object) agregująca wyniki procesu importu danych (np. z pliku CSV).
+// Przechowuje statystyki dotyczące liczby poprawnie przetworzonych rekordów oraz listę szczegółów napotkanych błędów.
 public class ImportSummary {
     private int importedCount;
     private List&lt;String&gt; errors;
 
-<span class="nc" id="L11">    public ImportSummary(int importedCount, List&lt;String&gt; errors) {</span>
-<span class="nc" id="L12">        this.importedCount = importedCount;</span>
-<span class="nc" id="L13">        this.errors = errors;</span>
-<span class="nc" id="L14">    }</span>
+    // Konstruktor inicjalizujący obiekt raportu.
+    // Przyjmuje licznik sukcesów oraz listę komunikatów błędów dla wierszy, których nie udało się zaimportować.
+<span class="nc" id="L13">    public ImportSummary(int importedCount, List&lt;String&gt; errors) {</span>
+<span class="nc" id="L14">        this.importedCount = importedCount;</span>
+<span class="nc" id="L15">        this.errors = errors;</span>
+<span class="nc" id="L16">    }</span>
 
     public int getImportedCount() {
-<span class="nc" id="L17">        return importedCount;</span>
+<span class="nc" id="L19">        return importedCount;</span>
     }
 
+    // Zwraca listę opisów błędów. Każdy ciąg znaków w liście odpowiada konkretnemu problemowi walidacji napotkanemu podczas importu.
     public List&lt;String&gt; getErrors() {
-<span class="nc" id="L21">        return errors;</span>
+<span class="nc" id="L24">        return errors;</span>
     }
 
+    // Przesłonięcie metody toString w celu ułatwienia logowania i debugowania procesu.
+    // Zwraca skrócone podsumowanie operacji (liczba sukcesów vs całkowita liczba błędów), zamiast wypisywać pełną treść błędów.
     @Override
     public String toString() {
-<span class="nc" id="L26">        return &quot;ImportSummary{&quot; +</span>
+<span class="nc" id="L31">        return &quot;ImportSummary{&quot; +</span>
                 &quot;zaimportowano=&quot; + importedCount +
-<span class="nc" id="L28">                &quot;, błędy=&quot; + errors.size() +</span>
+<span class="nc" id="L33">                &quot;, błędy=&quot; + errors.size() +</span>
                 '}';
     }
 }

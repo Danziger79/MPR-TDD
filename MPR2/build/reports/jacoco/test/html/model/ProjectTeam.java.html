@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProjectTeam.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MPR2</a> &gt; <a href="index.source.html" class="el_package">model</a> &gt; <span class="el_source">ProjectTeam.java</span></div><h1>ProjectTeam.java</h1><pre class="source lang-java linenums">package model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+// Klasa domenowa reprezentująca zespół projektowy.
+// Zarządza listą przypisanych pracowników oraz przechowuje stałe ograniczenia biznesowe dotyczące struktury zespołu.
+public class ProjectTeam {
+
+    private String teamName;
+
+    // Wewnętrzna lista przechowywująca referencje do obiektów Employee będących członkami tego zespołu.
+<span class="fc" id="L13">    private List&lt;Employee&gt; members = new ArrayList&lt;&gt;();</span>
+
+    // Stała konfiguracyjna określająca maksymalny dopuszczalny rozmiar zespołu zgodnie z regułami biznesowymi.
+    private static final int MAX_TEAM_SIZE = 5;
+
+    // Konstruktor tworzący nowy zespół o wskazanej nazwie.
+<span class="fc" id="L19">    public ProjectTeam(String teamName) {</span>
+<span class="fc" id="L20">        this.teamName = teamName;</span>
+<span class="fc" id="L21">    }</span>
+
+    public String getTeamName() {
+<span class="fc" id="L24">        return teamName;</span>
+    }
+
+    // Zwraca listę obecnych członków zespołu.
+    // Metoda zwraca tzw. &quot;defensive copy&quot; (nową instancję listy), aby uniemożliwić modyfikację
+    // wewnętrznego stanu obiektu ProjectTeam poprzez bezpośrednie operacje na zwróconej liście.
+    public List&lt;Employee&gt; getMembers() {
+<span class="fc" id="L31">        return new ArrayList&lt;&gt;(members);</span>
+    }
+
+    public int getMaxTeamSize() {
+<span class="fc" id="L35">        return MAX_TEAM_SIZE;</span>
+    }
+
+    // Dodaje pracownika do zespołu.
+    // Metoda zawiera mechanizm dedublikacji - weryfikuje, czy dany pracownik nie znajduje się już na liście,
+    // aby uniknąć wielokrotnego przypisania tej samej osoby do jednego projektu.
+    public void addMember(Employee employee) {
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">        if (!members.contains(employee)) {</span>
+<span class="fc" id="L43">            members.add(employee);</span>
+        }
+<span class="fc" id="L45">    }</span>
+
+    // Usuwa wskazanego pracownika z listy członków zespołu.
+    public void removeMember(Employee employee) {
+<span class="fc" id="L49">        members.remove(employee);</span>
+<span class="fc" id="L50">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

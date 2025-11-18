@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="service.PromotionServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-11-17T20:22:37.660Z" hostname="LUCY" time="0.199">
+<testsuite name="service.PromotionServiceTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2025-11-18T13:02:41.051Z" hostname="LUCY" time="0.798">
   <properties/>
-  <testcase name="Awans na to samo lub niższe stanowisko powinien rzucić wyjątek" classname="service.PromotionServiceTest" time="0.199"/>
+  <testcase name="Podwyżka 10% dla pensji 10000 powinna skutkować kwotą 11000.00" classname="service.PromotionServiceTest" time="0.033"/>
+  <testcase name="Podwyżka 5.5% dla pensji 12000 powinna skutkować kwotą 12660.00" classname="service.PromotionServiceTest" time="0.002"/>
+  <testcase name="Podwyżka 0% dla pensji 5000 powinna skutkować kwotą 5000.00" classname="service.PromotionServiceTest" time="0.003"/>
+  <testcase name="Awans z Managera na MANAGER powinien być zablokowany" classname="service.PromotionServiceTest" time="0.646"/>
+  <testcase name="Awans z Managera na PROGRAMISTA powinien być zablokowany" classname="service.PromotionServiceTest" time="0.002"/>
+  <testcase name="Awans z Managera na STAZYSTA powinien być zablokowany" classname="service.PromotionServiceTest" time="0.004"/>
+  <testcase name="Awans ze Stażysty na Programistę powinien zaktualizować stanowisko i zresetować pensję do bazy" classname="service.PromotionServiceTest" time="0.067"/>
+  <testcase name="Podwyżka nie powinna przekroczyć maksymalnych widełek płacowych dla danego stanowiska" classname="service.PromotionServiceTest" time="0.005"/>
+  <testcase name="Próba udzielenia ujemnej podwyżki powinna rzucić wyjątek walidacji" classname="service.PromotionServiceTest" time="0.002"/>
+  <testcase name="Próba awansu na to samo lub niższe stanowisko powinna skutkować wyjątkiem" classname="service.PromotionServiceTest" time="0.003"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

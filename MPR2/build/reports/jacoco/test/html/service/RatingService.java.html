@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RatingService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MPR2</a> &gt; <a href="index.source.html" class="el_package">service</a> &gt; <span class="el_source">RatingService.java</span></div><h1>RatingService.java</h1><pre class="source lang-java linenums">package service;
+
+import model.Employee;
+
+import java.util.List;
+
+// Serwis odpowiedzialny za system oceniania efektywności pracowników.
+// Dostarcza interfejs do manipulacji historią ocen oraz wyliczania metryk statystycznych.
+<span class="fc" id="L9">public class RatingService {</span>
+
+    // Rejestruje nową notę w historii pracownika.
+    // Logika walidacji wartości oraz zapisu jest delegowana bezpośrednio do metody domenowej w klasie Employee.
+    public void addRating(Employee employee, int rating) {
+<span class="fc" id="L14">        employee.addRating(rating);</span>
+<span class="fc" id="L15">    }</span>
+
+    /**
+     * Oblicza średnią arytmetyczną ze wszystkich ocen zgromadzonych w historii pracownika.
+     *
+     * @param employee Pracownik, dla którego obliczana jest statystyka.
+     * @return Średnia ocen jako wartość zmiennoprzecinkowa. Zwraca 0.0 w przypadku braku jakichkolwiek ocen.
+     */
+    public double getAverageRating(Employee employee) {
+
+<span class="fc" id="L25">        List&lt;Integer&gt; ratings = employee.getRatingHistory();</span>
+
+        // Obsługa przypadku brzegowego: pusta historia ocen.
+        // Zwracamy wartość domyślną 0.0, aby uniknąć wyjątku dzielenia przez zero lub zwracania NaN.
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        if (ratings.isEmpty()) {</span>
+<span class="fc" id="L30">            return 0.0;</span>
+        }
+
+<span class="fc" id="L33">        double sum = 0;</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        for (int rating : ratings) {</span>
+<span class="fc" id="L35">            sum += rating;</span>
+<span class="fc" id="L36">        }</span>
+
+        // Wyliczenie średniej poprzez podzielenie sumy punktów przez liczebność zbioru.
+<span class="fc" id="L39">        return sum / ratings.size();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

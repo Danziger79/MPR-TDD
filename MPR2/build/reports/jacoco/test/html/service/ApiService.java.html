@@ -17,83 +17,78 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-// Serwis do gadania z zewnętrznym API
+// Serwis odpowiedzialny za komunikację z zewnętrznym REST API.
+// Obsługuje wysyłanie żądań HTTP oraz deserializację odpowiedzi JSON na obiekty modelu wewnętrznego.
 public class ApiService {
 
-    // Klient HTTP i parser GSON.
-    // Tworzymy je raz i używamy wielokrotnie.
     private final HttpClient client;
     private final Gson gson;
 
-<span class="nc" id="L28">    public ApiService() {</span>
-<span class="nc" id="L29">        this.client = HttpClient.newHttpClient();</span>
-<span class="nc" id="L30">        this.gson = new Gson();</span>
-<span class="nc" id="L31">    }</span>
+<span class="nc" id="L27">    public ApiService() {</span>
+<span class="nc" id="L28">        this.client = HttpClient.newHttpClient();</span>
+<span class="nc" id="L29">        this.gson = new Gson();</span>
+<span class="nc" id="L30">    }</span>
 
     /**
-     * Pobiera użytkowników z API i mapuje ich na naszą klasę Employee.
-     * Rzuca nasz własny wyjątek 'ApiException', jeśli coś pójdzie nie tak.
+     * Pobiera listę użytkowników z zewnętrznego serwisu i konwertuje ją na listę pracowników.
+     * Metoda wykonuje synchroniczne zapytanie HTTP GET, parsuje odpowiedź i mapuje wybrane pola.
+     *
+     * @return Lista obiektów Employee utworzona na podstawie danych z API.
+     * @throws ApiException W przypadku błędu sieciowego, błędu HTTP (status inny niż 200) lub błędu parsowania JSON.
      */
     public List&lt;Employee&gt; fetchEmployeesFromApi() throws ApiException {
-<span class="nc" id="L38">        List&lt;Employee&gt; apiEmployees = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L40">        List&lt;Employee&gt; apiEmployees = new ArrayList&lt;&gt;();</span>
 
-        // 1. Zbuduj zapytanie (Request) - dokładnie jak na wykładzie
-<span class="nc" id="L41">        HttpRequest request = HttpRequest.newBuilder()</span>
-<span class="nc" id="L42">                .uri(URI.create(&quot;https://jsonplaceholder.typicode.com/users&quot;))</span>
-<span class="nc" id="L43">                .GET() // Mówimy, że to metoda GET</span>
-<span class="nc" id="L44">                .build();</span>
+        // Konstrukcja żądania HTTP GET skierowanego do endpointu z danymi użytkowników.
+<span class="nc" id="L43">        HttpRequest request = HttpRequest.newBuilder()</span>
+<span class="nc" id="L44">                .uri(URI.create(&quot;https://jsonplaceholder.typicode.com/users&quot;))</span>
+<span class="nc" id="L45">                .GET()</span>
+<span class="nc" id="L46">                .build();</span>
 
         try {
-            // 2. Wyślij zapytanie i pobierz odpowiedź (Response)
-            // Mówimy, że spodziewamy się odpowiedzi jako String (JSON)
-<span class="nc" id="L49">            HttpResponse&lt;String&gt; response = client.send(request, HttpResponse.BodyHandlers.ofString());</span>
+            // Wysłanie żądania i oczekiwanie na odpowiedź w formacie tekstowym (String).
+<span class="nc" id="L50">            HttpResponse&lt;String&gt; response = client.send(request, HttpResponse.BodyHandlers.ofString());</span>
 
-            // 3. Sprawdź status odpowiedzi
-<span class="nc bnc" id="L52" title="All 2 branches missed.">            if (response.statusCode() != 200) {</span>
-                // Jeśli serwer nie odpowiedział &quot;OK&quot; (kod 200), to jest błąd
-<span class="nc" id="L54">                throw new ApiException(&quot;Błąd zapytania API. Status: &quot; + response.statusCode());</span>
+            // Weryfikacja kodu statusu HTTP. Oczekiwany kod 200 (OK).
+<span class="nc bnc" id="L53" title="All 2 branches missed.">            if (response.statusCode() != 200) {</span>
+<span class="nc" id="L54">                throw new ApiException(&quot;Błąd zapytania API. Nieoczekiwany status: &quot; + response.statusCode());</span>
             }
 
-            // 4. Parsowanie JSON-a (tu wchodzi GSON)
+            // Deserializacja ciała odpowiedzi JSON do obiektu JsonArray przy użyciu biblioteki GSON.
 <span class="nc" id="L58">            String jsonBody = response.body();</span>
+<span class="nc" id="L59">            JsonArray usersArray = gson.fromJson(jsonBody, JsonArray.class);</span>
 
-            // Parsujemy cały string odpowiedzi na 'JsonArray' (bo API zwraca listę)
-<span class="nc" id="L61">            JsonArray usersArray = gson.fromJson(jsonBody, JsonArray.class);</span>
+            // Iteracja po elementach tablicy JSON i mapowanie pól na obiekt domenowy Employee.
+<span class="nc bnc" id="L62" title="All 2 branches missed.">            for (JsonElement userElement : usersArray) {</span>
+<span class="nc" id="L63">                JsonObject userObject = userElement.getAsJsonObject();</span>
 
-            // 5. Iterujemy po tablicy JSON
-<span class="nc bnc" id="L64" title="All 2 branches missed.">            for (JsonElement userElement : usersArray) {</span>
-                // Każdy element tablicy to obiekt, więc rzutujemy go
-<span class="nc" id="L66">                JsonObject userObject = userElement.getAsJsonObject();</span>
+                // Ekstrakcja podstawowych danych tekstowych z obiektu JSON.
+<span class="nc" id="L66">                String fullName = userObject.get(&quot;name&quot;).getAsString();</span>
+<span class="nc" id="L67">                String email = userObject.get(&quot;email&quot;).getAsString();</span>
 
-                // Wyciągamy dane z JSON-a, pole po polu
-                // Dokładnie tak, jak na wykładzie: .get(&quot;nazwaPola&quot;).getAsTyp()
-<span class="nc" id="L70">                String fullName = userObject.get(&quot;name&quot;).getAsString();</span>
-<span class="nc" id="L71">                String email = userObject.get(&quot;email&quot;).getAsString();</span>
+                // Nawigacja do zagnieżdżonego obiektu 'company' w celu pobrania nazwy firmy.
+<span class="nc" id="L70">                String companyName = userObject.get(&quot;company&quot;)</span>
+<span class="nc" id="L71">                        .getAsJsonObject()</span>
+<span class="nc" id="L72">                        .get(&quot;name&quot;)</span>
+<span class="nc" id="L73">                        .getAsString();</span>
 
-                // Pole &quot;company.name&quot; jest zagnieżdżone, więc musimy
-                // najpierw pobrać obiekt &quot;company&quot;, a dopiero z niego &quot;name&quot;
-<span class="nc" id="L75">                String companyName = userObject.get(&quot;company&quot;)</span>
-<span class="nc" id="L76">                        .getAsJsonObject()</span>
-<span class="nc" id="L77">                        .get(&quot;name&quot;)</span>
-<span class="nc" id="L78">                        .getAsString();</span>
+                // Przypisanie domyślnego stanowiska i wynagrodzenia dla pracowników importowanych z API.
+<span class="nc" id="L76">                Position position = Position.PROGRAMISTA;</span>
+<span class="nc" id="L77">                double salary = position.getBaseSalary();</span>
 
-                // Zgodnie z zadaniem, sztywne przypisanie stanowiska i pensji
-<span class="nc" id="L81">                Position position = Position.PROGRAMISTA;</span>
-<span class="nc" id="L82">                double salary = position.getBaseSalary(); // Bierzemy bazową stawkę</span>
+<span class="nc" id="L79">                apiEmployees.add(new Employee(fullName, email, companyName, position, salary));</span>
+<span class="nc" id="L80">            }</span>
 
-                // Tworzymy pracownika i dodajemy do listy
-<span class="nc" id="L85">                apiEmployees.add(new Employee(fullName, email, companyName, position, salary));</span>
-<span class="nc" id="L86">            }</span>
+<span class="nc" id="L82">        } catch (IOException | InterruptedException e) {</span>
+            // Obsługa błędów warstwy transportowej lub przerwania wątku.
+            // Wyjątek jest opakowywany w ApiException w celu zachowania spójności interfejsu.
+<span class="nc" id="L85">            throw new ApiException(&quot;Błąd połączenia z API: &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L86">        } catch (JsonSyntaxException e) {</span>
+            // Obsługa błędów wynikających z nieprawidłowej struktury otrzymanego JSON-a.
+<span class="nc" id="L88">            throw new ApiException(&quot;Błąd parsowania odpowiedzi JSON: &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L89">        }</span>
 
-<span class="nc" id="L88">        } catch (IOException | InterruptedException e) {</span>
-            // To są błędy związane z siecią (np. brak neta)
-<span class="nc" id="L90">            throw new ApiException(&quot;Błąd połączenia z API: &quot; + e.getMessage(), e);</span>
-<span class="nc" id="L91">        } catch (JsonSyntaxException e) {</span>
-            // To jest błąd, jeśli API zwróci nam &quot;nie-JSONa&quot;
-<span class="nc" id="L93">            throw new ApiException(&quot;Błąd parsowania odpowiedzi JSON: &quot; + e.getMessage(), e);</span>
-<span class="nc" id="L94">        }</span>
-
-<span class="nc" id="L96">        return apiEmployees; // Zwracamy listę pobranych pracowników</span>
+<span class="nc" id="L91">        return apiEmployees;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

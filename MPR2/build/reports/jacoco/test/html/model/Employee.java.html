@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Employee.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MPR2</a> &gt; <a href="index.source.html" class="el_package">model</a> &gt; <span class="el_source">Employee.java</span></div><h1>Employee.java</h1><pre class="source lang-java linenums">package model;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-
+// Klasa reprezentująca encję pracownika w systemie. Przechowuje dane osobowe,
+// informacje o zatrudnieniu, historię ocen oraz przypisanie do zespołu projektowego.
 public class Employee {
     private String name;
     private String email;
@@ -10,48 +14,94 @@ public class Employee {
     private Position position;
     private double salary;
 
+    // Lista przechowująca historię ocen. Inicjalizowana jako pusta lista przy tworzeniu obiektu.
+<span class="fc" id="L18">    private List&lt;Integer&gt; ratingHistory = new ArrayList&lt;&gt;();</span>
+    private LocalDate dateOfHire;
 
-<span class="fc" id="L14">    public Employee(String name, String email, String companyName, Position position, double salary) {</span>
+<span class="fc" id="L21">    private ProjectTeam currentTeam = null;</span>
 
-<span class="fc" id="L16">        this.name = name;</span>
-<span class="fc" id="L17">        this.email = email;</span>
-<span class="fc" id="L18">        this.companyName = companyName;</span>
-<span class="fc" id="L19">        this.position = position;</span>
-<span class="fc" id="L20">        this.salary = salary;</span>
-<span class="fc" id="L21">    }</span>
+    // Konstruktor pomocniczy. Inicjalizuje obiekt pracownika przyjmując podstawowe dane,
+    // a datę zatrudnienia ustawia automatycznie na bieżącą datę systemową (LocalDate.now()).
+    // Wywołuje główny konstruktor klasy.
+    public Employee(String name, String email, String companyName, Position position, double salary) {
+<span class="fc" id="L27">        this(name, email, companyName, position, salary, LocalDate.now());</span>
+<span class="fc" id="L28">    }</span>
 
+    // Główny konstruktor klasy inicjalizujący wszystkie pola wymagane do utworzenia profilu pracownika.
+<span class="fc" id="L31">    public Employee(String name, String email, String companyName, Position position, double salary, LocalDate dateOfHire) {</span>
+<span class="fc" id="L32">        this.name = name;</span>
+<span class="fc" id="L33">        this.email = email;</span>
+<span class="fc" id="L34">        this.companyName = companyName;</span>
+<span class="fc" id="L35">        this.position = position;</span>
+<span class="fc" id="L36">        this.salary = salary;</span>
+<span class="fc" id="L37">        this.dateOfHire = dateOfHire;</span>
+<span class="fc" id="L38">    }</span>
 
-<span class="nc" id="L24">    public String getName() { return name; }</span>
-<span class="nc" id="L25">    public String getEmail() { return email; }</span>
-<span class="nc" id="L26">    public String getCompanyName() { return companyName; }</span>
-<span class="fc" id="L27">    public Position getPosition() { return position; }</span>
-<span class="nc" id="L28">    public double getSalary() { return salary; }</span>
+<span class="fc" id="L40">    public String getName() { return name; }</span>
+<span class="nc" id="L41">    public String getEmail() { return email; }</span>
+<span class="fc" id="L42">    public String getCompanyName() { return companyName; }</span>
+<span class="fc" id="L43">    public Position getPosition() { return position; }</span>
+<span class="fc" id="L44">    public double getSalary() { return salary; }</span>
+<span class="fc" id="L45">    public LocalDate getDateOfHire() { return dateOfHire; }</span>
 
-
-    public void setSalary(double salary) {
-<span class="nc" id="L32">        this.salary = salary;</span>
-<span class="nc" id="L33">    }</span>
-
-    public void setPosition(Position position) {
-<span class="nc" id="L36">        this.position = position;</span>
-<span class="nc" id="L37">    }</span>
-
-    @Override
-    public boolean equals(Object o) {
-<span class="nc bnc" id="L41" title="All 2 branches missed.">        if (this == o) return true;</span>
-<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (!(o instanceof Employee)) return false;</span>
-<span class="nc" id="L43">        Employee employee = (Employee) o;</span>
-<span class="nc" id="L44">        return Objects.equals(email, employee.email);</span>
+    public ProjectTeam getCurrentTeam() {
+<span class="fc" id="L48">        return currentTeam;</span>
     }
 
+    // Przypisuje pracownika do konkretnego zespołu projektowego.
+    public void setCurrentTeam(ProjectTeam currentTeam) {
+<span class="fc" id="L53">        this.currentTeam = currentTeam;</span>
+<span class="fc" id="L54">    }</span>
+
+    // Usuwa pracownika z obecnego zespołu projektowego poprzez ustawienie referencji na null.
+    public void leaveCurrentTeam() {
+<span class="fc" id="L58">        this.currentTeam = null;</span>
+<span class="fc" id="L59">    }</span>
+
+    public void setSalary(double salary) {
+<span class="fc" id="L62">        this.salary = salary;</span>
+<span class="fc" id="L63">    }</span>
+
+    public void setPosition(Position position) {
+<span class="fc" id="L66">        this.position = position;</span>
+<span class="fc" id="L67">    }</span>
+
+    // Zwraca historię ocen pracownika.
+    // Metoda tworzy i zwraca nową kopię listy (defensive copy), aby zapobiec
+    // modyfikacji wewnętrznej struktury danych obiektu przez zewnętrzne klasy.
+    public List&lt;Integer&gt; getRatingHistory() {
+<span class="fc" id="L73">        return new ArrayList&lt;&gt;(ratingHistory);</span>
+    }
+
+    // Dodaje nową ocenę do historii ocen pracownika.
+    // Metoda przeprowadza walidację danych wejściowych - akceptuje tylko wartości z przedziału 1-5.
+    // W przypadku podania nieprawidłowej wartości rzucany jest wyjątek IllegalArgumentException.
+    public void addRating(int rating) {
+<span class="fc bfc" id="L80" title="All 4 branches covered.">        if (rating &lt; 1 || rating &gt; 5) {</span>
+<span class="fc" id="L81">            throw new IllegalArgumentException(&quot;Ocena musi być w skali 1-5&quot;);</span>
+        }
+<span class="fc" id="L83">        this.ratingHistory.add(rating);</span>
+<span class="fc" id="L84">    }</span>
+
+    // Przesłonięta metoda porównująca obiekty.
+    // Dwa obiekty Employee są uznawane za identyczne, jeśli posiadają ten sam adres email (unikalny identyfikator).
+    @Override
+    public boolean equals(Object o) {
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        if (this == o) return true;</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        if (!(o instanceof Employee)) return false;</span>
+<span class="fc" id="L92">        Employee employee = (Employee) o;</span>
+<span class="fc" id="L93">        return Objects.equals(email, employee.email);</span>
+    }
+
+    // Generuje kod hash na podstawie pola email, aby zachować spójność z kontraktem metody equals.
     @Override
     public int hashCode() {
-<span class="nc" id="L49">        return Objects.hash(email);</span>
+<span class="fc" id="L99">        return Objects.hash(email);</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L54">        return name + &quot; (&quot; + position + &quot;) - &quot; + salary + &quot; PLN, &quot; + companyName;</span>
+<span class="nc" id="L104">        return name + &quot; (&quot; + position + &quot;) - &quot; + salary + &quot; PLN, &quot; + companyName;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

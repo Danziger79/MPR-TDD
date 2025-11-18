@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TenureService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MPR2</a> &gt; <a href="index.source.html" class="el_package">service</a> &gt; <span class="el_source">TenureService.java</span></div><h1>TenureService.java</h1><pre class="source lang-java linenums">package service;
+
+import model.Employee;
+import java.time.LocalDate;
+import java.time.Period;
+
+// Serwis domeny HR odpowiedzialny za wyliczanie stażu pracy (seniority) pracowników.
+// Dostarcza funkcjonalności związane z analizą czasu trwania zatrudnienia w oparciu o daty.
+<span class="fc" id="L9">public class TenureService {</span>
+
+    /**
+     * Oblicza staż pracy pracownika w pełnych latach na dzień wskazanej daty odniesienia.
+     * Metoda wykorzystuje API java.time do precyzyjnych obliczeń kalendarzowych.
+     *
+     * @param employee Pracownik, którego staż jest obliczany.
+     * @param currentDate Data odniesienia (np. dzień dzisiejszy lub data generowania raportu).
+     * @return Liczba pełnych lat przepracowanych przez pracownika. Zwraca 0, jeśli data zatrudnienia jest późniejsza niż data odniesienia.
+     */
+    public long getTenureInYears(Employee employee, LocalDate currentDate) {
+
+        // Weryfikacja chronologii dat.
+        // Sytuacja, w której data zatrudnienia następuje po dacie odniesienia (np. planowane zatrudnienie w przyszłości),
+        // jest traktowana jako brak stażu (0 lat), co zapobiega błędom logicznym i wartościom ujemnym.
+<span class="fc bfc" id="L24" title="All 2 branches covered.">        if (employee.getDateOfHire().isAfter(currentDate)) {</span>
+<span class="fc" id="L25">            return 0;</span>
+        }
+
+        // Obliczenie okresu czasu (Period) między dwiema datami zgodnie z systemem kalendarzowym ISO-8601.
+        // Klasa Period uwzględnia lata przestępne oraz różną długość miesięcy.
+<span class="fc" id="L30">        Period period = Period.between(employee.getDateOfHire(), currentDate);</span>
+
+        // Ekstrakcja i zwrócenie liczby pełnych lat z obliczonego okresu.
+<span class="fc" id="L33">        return period.getYears();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

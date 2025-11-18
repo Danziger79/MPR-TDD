@@ -2,31 +2,34 @@
 
 import java.text.DecimalFormat;
 
-// Kolejny &quot;kontenerek&quot; na dane, tym razem na statystyki firmy.
+// Klasa modelu danych (DTO) przechowująca zagregowane statystyki dotyczące firmy.
+// Służy do przenoszenia przetworzonych informacji o zatrudnieniu i wynagrodzeniach.
 public class CompanyStatistics {
     private int employeeCount;
     private double averageSalary;
-    private String highestEarnerName; // Pełne imię i nazwisko
+    private String highestEarnerName;
 
-<span class="nc" id="L11">    public CompanyStatistics(int employeeCount, double averageSalary, String highestEarnerName) {</span>
-<span class="nc" id="L12">        this.employeeCount = employeeCount;</span>
-<span class="nc" id="L13">        this.averageSalary = averageSalary;</span>
-<span class="nc" id="L14">        this.highestEarnerName = highestEarnerName;</span>
-<span class="nc" id="L15">    }</span>
+    // Konstruktor inicjalizujący obiekt wszystkimi wymaganymi danymi statystycznymi.
+    // Przyjmuje obliczoną wcześniej liczbę pracowników, średnią pensję oraz dane pracownika z najwyższym wynagrodzeniem.
+<span class="fc" id="L14">    public CompanyStatistics(int employeeCount, double averageSalary, String highestEarnerName) {</span>
+<span class="fc" id="L15">        this.employeeCount = employeeCount;</span>
+<span class="fc" id="L16">        this.averageSalary = averageSalary;</span>
+<span class="fc" id="L17">        this.highestEarnerName = highestEarnerName;</span>
+<span class="fc" id="L18">    }</span>
 
-    // Gettery (gdybyśmy ich potrzebowali)
-<span class="nc" id="L18">    public int getEmployeeCount() { return employeeCount; }</span>
-<span class="nc" id="L19">    public double getAverageSalary() { return averageSalary; }</span>
-<span class="nc" id="L20">    public String getHighestEarnerName() { return highestEarnerName; }</span>
+<span class="fc" id="L20">    public int getEmployeeCount() { return employeeCount; }</span>
+<span class="fc" id="L21">    public double getAverageSalary() { return averageSalary; }</span>
+<span class="fc" id="L22">    public String getHighestEarnerName() { return highestEarnerName; }</span>
 
-    // Nadpisujemy toString, żeby fajnie się drukowało na konsoli
+    // Przesłonięcie metody toString w celu wygenerowania czytelnego raportu tekstowego.
+    // Wewnątrz metody wykorzystywana jest klasa DecimalFormat, aby sformatować wartość zmiennoprzecinkową
+    // (średnią pensję) do dwóch miejsc po przecinku, zgodnie ze standardem zapisu walutowego.
     @Override
     public String toString() {
-        // Mały trik na sformatowanie pensji do dwóch miejsc po przecinku
-<span class="nc" id="L26">        DecimalFormat df = new DecimalFormat(&quot;#.00&quot;);</span>
-<span class="nc" id="L27">        return &quot;Statystyki firmy: &quot; +</span>
+<span class="nc" id="L29">        DecimalFormat df = new DecimalFormat(&quot;#.00&quot;);</span>
+<span class="nc" id="L30">        return &quot;Statystyki firmy: &quot; +</span>
                 &quot;Liczba pracowników=&quot; + employeeCount +
-<span class="nc" id="L29">                &quot;, Średnia pensja=&quot; + df.format(averageSalary) + &quot; PLN&quot; +</span>
+<span class="nc" id="L32">                &quot;, Średnia pensja=&quot; + df.format(averageSalary) + &quot; PLN&quot; +</span>
                 &quot;, Najlepiej zarabiający='&quot; + highestEarnerName + '\'';
     }
 }

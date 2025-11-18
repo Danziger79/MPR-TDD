@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="service.EmployeeServiceTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2025-11-18T13:02:40.948Z" hostname="LUCY" time="0.083">
+  <properties/>
+  <testcase name="Powinien posortować listę pracowników alfabetycznie według imienia" classname="service.EmployeeServiceTest" time="0.009"/>
+  <testcase name="Powinien zwrócić listę pracowników przefiltrowaną po nazwie firmy" classname="service.EmployeeServiceTest" time="0.005"/>
+  <testcase name="Wyszukiwanie po firmie powinno ignorować wielkość liter" classname="service.EmployeeServiceTest" time="0.003"/>
+  <testcase name="Powinien zwrócić poprawne liczniki pracowników dla każdego stanowiska" classname="service.EmployeeServiceTest" time="0.002"/>
+  <testcase name="Powinien wygenerować poprawne statystyki (CompanyStatistics) dla każdej firmy" classname="service.EmployeeServiceTest" time="0.009"/>
+  <testcase name="Powinien poprawnie zgrupować pracowników według stanowiska" classname="service.EmployeeServiceTest" time="0.002"/>
+  <testcase name="Nie powinien dodać pracownika, jeśli email już istnieje (duplikat)" classname="service.EmployeeServiceTest" time="0.002"/>
+  <testcase name="Powinien zidentyfikować pracownika z najwyższym wynagrodzeniem" classname="service.EmployeeServiceTest" time="0.002"/>
+  <testcase name="Powinien obliczyć poprawną średnią pensję dla wszystkich pracowników" classname="service.EmployeeServiceTest" time="0.002"/>
+  <testcase name="Powinien pomyślnie dodać nowego pracownika (unikalny email)" classname="service.EmployeeServiceTest" time="0.001"/>
+  <testcase name="Wyszukiwanie nieistniejącej firmy powinno zwrócić pustą listę (nie null)" classname="service.EmployeeServiceTest" time="0.002"/>
+  <testcase name="Metody analityczne nie powinny rzucać wyjątków dla pustego serwisu" classname="service.EmployeeServiceTest" time="0.02"/>
+  <testcase name="Powinien wykryć niespójności w wynagrodzeniach (poniżej widełek)" classname="service.EmployeeServiceTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
