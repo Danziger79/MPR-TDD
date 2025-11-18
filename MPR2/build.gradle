@@ -1,26 +1,26 @@
-// Mamy tu pluginy z obu wersji: java, application ORAZ jacoco
+//  pluginy z obu wersji: java, application ORAZ jacoco
 plugins {
     id 'java'
     id 'application'
-    id 'jacoco' // <-- Dodany plugin do raportów pokrycia
+    id 'jacoco'
 }
 
-// Ustawiamy, która klasa ma metodę main (zostaje bez zmian)
+// Ustawiamy, która klasa ma metodę main
 application {
     mainClass = 'Main'
 }
 
-// Nazwa naszej grupy i wersja (zostaje bez zmian)
+// Nazwa naszej grupy i wersja
 group = 'com.bootcamp'
 version = '1.0.0'
 
-// Używamy Javy 11 (zostaje bez zmian)
+// Używamy Javy 11
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
 }
 
-// Repozytoria (zostają bez zmian)
+// Repozytoria
 repositories {
     mavenCentral()
 }
@@ -32,14 +32,14 @@ dependencies {
 
     // --- ZALEŻNOŚCI TESTOWE ---
 
-    // JUnit 5 (już go mieliśmy)
+    // JUnit 5
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
 
     // NOWA: Biblioteka AssertJ (ta z płynnym API)
-    testImplementation 'org.assertj:assertj-core:3.26.3' // <-- DODANE
+    testImplementation 'org.assertj:assertj-core:3.26.3'
 
     // NOWA: Biblioteka Hamcrest (ta z matcherami 'is', 'equalTo')
-    testImplementation 'org.hamcrest:hamcrest:2.2' // <-- DODANE
+    testImplementation 'org.hamcrest:hamcrest:2.2'
 }
 
 // --- NOWA KONFIGURACJA TESTÓW ---
@@ -51,17 +51,17 @@ test {
 }
 
 // --- NOWA KONFIGURACJA JaCoCo ---
-// Mówimy, że chcemy raport HTML
+
 jacocoTestReport {
     dependsOn test
     reports {
-        html.required = true  // Chcemy ten fajny raport HTML
+        html.required = true  //  fajny raport HTML
         xml.required = false
         csv.required = false
     }
 }
 
-// Ustawiamy kodowanie na UTF-8 (zostaje bez zmian)
+// Ustawiamy kodowanie na UTF-8
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
