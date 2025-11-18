@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="service.TenureServiceTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2025-11-18T13:02:42.410Z" hostname="LUCY" time="0.058">
+<testsuite name="service.TenureServiceTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2025-11-18T13:16:23.210Z" hostname="LUCY" time="0.034">
   <properties/>
-  <testcase name="Zatrudniony 2025-11-17, Data Raportu 2025-11-17 -&gt; Oczekiwany Staż: 0 lat" classname="service.TenureServiceTest" time="0.048"/>
+  <testcase name="Zatrudniony 2025-11-17, Data Raportu 2025-11-17 -&gt; Oczekiwany Staż: 0 lat" classname="service.TenureServiceTest" time="0.022"/>
   <testcase name="Zatrudniony 2024-11-18, Data Raportu 2025-11-17 -&gt; Oczekiwany Staż: 0 lat" classname="service.TenureServiceTest" time="0.001"/>
   <testcase name="Zatrudniony 2024-11-17, Data Raportu 2025-11-17 -&gt; Oczekiwany Staż: 1 lat" classname="service.TenureServiceTest" time="0.001"/>
   <testcase name="Zatrudniony 2027-01-01, Data Raportu 2025-11-17 -&gt; Oczekiwany Staż: 0 lat" classname="service.TenureServiceTest" time="0.002"/>

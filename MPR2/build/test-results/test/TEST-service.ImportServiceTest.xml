@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="service.ImportServiceTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2025-11-18T13:16:22.537Z" hostname="LUCY" time="0.256">
+  <properties/>
+  <testcase name="Powinien obsłużyć pusty plik" classname="service.ImportServiceTest" time="0.144"/>
+  <testcase name="Powinien zgłosić błąd dla nieistniejącego pliku" classname="service.ImportServiceTest" time="0.008"/>
+  <testcase name="Powinien pominąć błędne wiersze i zaraportować błędy" classname="service.ImportServiceTest" time="0.074"/>
+  <testcase name="Powinien poprawnie zaimportować poprawny plik CSV" classname="service.ImportServiceTest" time="0.01"/>
+  <testcase name="Nie powinien zaimportować duplikatów (ten sam email w serwisie)" classname="service.ImportServiceTest" time="0.014"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
