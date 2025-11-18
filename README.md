@@ -93,4 +93,3 @@ Zanim rozpoczęto TDD, modele zostały przygotowane do obsługi nowej logiki:
 
 Po uruchomieniu komendy `./gradlew test`, raport pokrycia kodu został wygenerowany przez JaCoCo. Poniższy zrzut ekranu przedstawia pokrycie dla klas serwisowych i modeli, które implementowaliśmy.
 
-*(Tutaj zrób zrzut ekranu swojego raportu JaCoCo (pliku `index.html` z `build/reports/...`) i wklej go do `README.md`)*
