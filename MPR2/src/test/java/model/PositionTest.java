@@ -1,21 +1,28 @@
 package model;
 
-// Importujemy adnotacje do testów parametryzowanych (z wykładu!)
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// Klasa testowa weryfikująca poprawność konfiguracji stałych wyliczeniowych w enum Position.
+// Zapewnia integralność danych dotyczących widełek płacowych oraz struktury hierarchicznej firmy.
 class PositionTest {
 
-    // To jest ten super test z wykładu.
-    // Zamiast pisać 5 testów, piszemy JEDEN, który odpali się 5 razy
-    // dla każdego zestawu danych z @CsvSource.
+    /**
+     * Weryfikuje spójność atrybutów (wynagrodzenie bazowe, poziom hierarchii) dla zdefiniowanych stanowisk.
+     * Wykorzystuje podejście Data-Driven Testing (testy sparametryzowane) w celu walidacji wielu przypadków
+     * przy użyciu jednej metody testowej, co eliminuje redundancję kodu.
+     *
+     * @param positionName Nazwa stałej wyliczeniowej (String).
+     * @param expectedSalary Oczekiwana wartość wynagrodzenia bazowego.
+     * @param expectedLevel Oczekiwany poziom w hierarchii organizacyjnej.
+     */
     @ParameterizedTest
-    @DisplayName("Sprawdzenie atrybutów stanowisk")
+    @DisplayName("Weryfikacja atrybutów konfiguracyjnych stanowisk")
     @CsvSource({
-            // Format: "NAZWA_ENUMA, OCZEKIWANA_PENSJA, OCZEKIWANY_POZIOM"
+            // Definicja zestawu danych testowych w formacie: "NAZWA_STANOWISKA, OCZEKIWANA_PENSJA, POZIOM_HIERARCHII"
             "PREZES,     25000, 1",
             "WICEPREZES, 18000, 2",
             "MANAGER,    12000, 3",
@@ -23,16 +30,16 @@ class PositionTest {
             "STAZYSTA,    3000, 5"
     })
     void testPositionAttributes(String positionName, double expectedSalary, int expectedLevel) {
-        // Arrange
-        // Konwertujemy String "PREZES" na enum Position.PREZES
+        // Dynamiczna konwersja dostarczonej nazwy tekstowej na instancję typu wyliczeniowego Position.
+        // W przypadku braku dopasowania nazwy, metoda valueOf rzuci IllegalArgumentException (co również obleje test).
         Position pos = Position.valueOf(positionName);
 
-        // Act (pobieramy wartości z enuma)
+        // Pobranie rzeczywistych wartości skonfigurowanych w kodzie enum.
         double actualSalary = pos.getBaseSalary();
         int actualLevel = pos.getHierarchyLevel();
 
-        // Assert (sprawdzamy obie wartości)
-        assertEquals(expectedSalary, actualSalary, "Bazowa pensja dla " + positionName + " się nie zgadza");
-        assertEquals(expectedLevel, actualLevel, "Poziom hierarchii dla " + positionName + " się nie zgadza");
+        // Weryfikacja zgodności konfiguracji enuma z oczekiwaniami biznesowymi.
+        assertEquals(expectedSalary, actualSalary, "Niezgodność wynagrodzenia bazowego dla stanowiska: " + positionName);
+        assertEquals(expectedLevel, actualLevel, "Niezgodność poziomu hierarchii dla stanowiska: " + positionName);
     }
 }

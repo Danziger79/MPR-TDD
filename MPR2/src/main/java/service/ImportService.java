@@ -11,11 +11,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-// Ten serwis będzie odpowiedzialny TYLKO za importowanie.
+// Serwis odpowiedzialny za proces masowego importu danych pracowników z plików zewnętrznych (CSV).
+// Klasa pełni rolę mediatora między surowymi danymi plikowymi a logiką biznesową serwisu EmployeeService.
 public class ImportService {
 
-    // Serwis importujący musi wiedzieć, gdzie dodawać pracowników,
-    // więc przekazujemy mu referencję do 'EmployeeService'.
+    // Referencja do głównego serwisu pracowniczego, umożliwiająca trwały zapis zwalidowanych danych.
     private EmployeeService employeeService;
 
     public ImportService(EmployeeService employeeService) {
@@ -23,69 +23,73 @@ public class ImportService {
     }
 
     /**
-     * Wczytuje plik CSV, parsuje go i dodaje pracowników do EmployeeService.
-     * Zgodnie z zadaniem, używamy BufferedReader i split(), zamiast OpenCSV.
+     * Przeprowadza proces importu danych z pliku CSV.
+     * Metoda otwiera plik, pomija nagłówek, a następnie iteruje po wierszach,
+     * dokonując parsowania, walidacji i konwersji każdego rekordu na obiekt Employee.
+     *
+     * @param filePath Ścieżka systemowa do pliku CSV.
+     * @return Obiekt ImportSummary zawierający statystyki sukcesów oraz listę błędów walidacji.
      */
     public ImportSummary importFromCsv(String filePath) {
         int importedCount = 0;
         List<String> errors = new ArrayList<>();
-        int lineNumber = 0; // Zaczynamy liczenie linii od 0
+        int lineNumber = 0;
 
-        // Używamy "try-with-resources", jak na wykładzie.
-        // BufferedReader otworzy się i ZAMKNIE AUTOMATYCZNIE,
-        // nawet jeśli poleci błąd. Super sprawa.
+        // Wykorzystanie konstrukcji try-with-resources zapewnia automatyczne zamknięcie
+        // strumienia wejściowego (BufferedReader) niezależnie od wyniku operacji (sukces lub wyjątek).
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
 
-            String line = reader.readLine(); // Wczytujemy pierwszą linię
-            lineNumber++; // Jesteśmy na linii 1
+            String line = reader.readLine();
+            lineNumber++;
 
-            // Sprawdzamy, czy to nagłówek (i czy plik nie jest pusty)
+            // Weryfikacja nagłówka pliku. Jeśli plik jest pusty lub pierwsza linia nie istnieje,
+            // proces importu zostaje przerwany, a błąd odnotowany.
             if (line == null || line.isEmpty()) {
                 errors.add("Plik jest pusty.");
                 return new ImportSummary(0, errors);
             }
 
-            // Mamy nagłówek, więc go pominęliśmy. Czytamy resztę w pętli.
+            // Pętla przetwarzająca właściwe dane (payload).
+            // Każdy obrót pętli odpowiada jednej linii w pliku CSV.
             while ((line = reader.readLine()) != null) {
-                lineNumber++; // Przechodzimy do kolejnej linii
+                lineNumber++;
 
-                // Pomijamy puste linie (np. ktoś wcisnął Enter na końcu pliku)
+                // Ignorowanie pustych linii (np. białych znaków na końcu pliku),
+                // aby uniknąć niepotrzebnych błędów parsowania.
                 if (line.trim().isEmpty()) {
-                    continue; // 'continue' przeskakuje do następnej iteracji pętli
+                    continue;
                 }
 
-                // Tutaj parsujemy JEDNĄ linię.
-                // Opakowujemy to w try/catch, żeby błąd w jednej linii
-                // nie zatrzymał nam całego importu.
+                // Blok try-catch zagnieżdżony wewnątrz pętli pozwala na izolację błędów.
+                // Błąd parsowania lub walidacji w jednym wierszu nie przerywa całego procesu importu,
+                // lecz jest rejestrowany w liście błędów, a pętla przechodzi do kolejnego rekordu.
                 try {
-                    // Dzielimy linię po przecinku
+                    // Podział linii na tokeny przy użyciu separatora przecinkowego.
                     String[] data = line.split(",");
 
-                    // Walidacja: czy mamy 6 kolumn?
+                    // Wstępna walidacja struktury rekordu (oczekiwana liczba kolumn: 6).
                     if (data.length != 6) {
-                        // Rzucamy własny wyjątek, który złapiemy poniżej
                         throw new InvalidDataException("Niepoprawna liczba kolumn (oczekiwano 6, jest " + data.length + ")");
                     }
 
-                    // Wyciągamy dane i 'trim()'ujemy (usuwamy białe znaki z początku/końca)
+                    // Normalizacja danych wejściowych (usunięcie białych znaków).
                     String firstName = data[0].trim();
                     String lastName = data[1].trim();
                     String email = data[2].trim();
                     String company = data[3].trim();
-                    String positionStr = data[4].trim().toUpperCase(); // Od razu do dużych liter
+                    String positionStr = data[4].trim().toUpperCase();
                     String salaryStr = data[5].trim();
 
-                    // Walidacja 1: Stanowisko (Position)
+                    // Walidacja i konwersja stanowiska (Position).
+                    // W przypadku podania wartości spoza enum Position, zostanie rzucony wyjątek.
                     Position position;
                     try {
-                        // Position.valueOf() rzuci błędem, jeśli nie znajdzie
-                        // stanowiska w enumie. To nam pasuje.
                         position = Position.valueOf(positionStr);
                     } catch (IllegalArgumentException e) {
                         throw new InvalidDataException("Nieznane stanowisko: '" + data[4].trim() + "'");
                     }
 
-                    // Walidacja 2: Pensja (Salary)
+                    // Parsowanie wartości numerycznej wynagrodzenia wraz z walidacją logiczną.
                     double salary;
                     try {
                         salary = Double.parseDouble(salaryStr);
@@ -97,32 +101,31 @@ public class ImportService {
                         throw new InvalidDataException("Pensja musi być dodatnia (jest " + salary + ")");
                     }
 
-                    // Jeśli wszystko poszło OK, tworzymy pracownika
+                    // Utworzenie obiektu domenowego po pomyślnej walidacji wszystkich pól.
                     String fullName = firstName + " " + lastName;
                     Employee employee = new Employee(fullName, email, company, position, salary);
 
-                    // I próbujemy go dodać do serwisu
+                    // Próba zapisu pracownika w serwisie głównym.
+                    // Metoda addEmployee zwraca false, jeśli pracownik o danym emailu już istnieje.
                     if (employeeService.addEmployee(employee)) {
-                        importedCount++; // Udało się!
+                        importedCount++;
                     } else {
-                        // Serwis zwrócił 'false', co oznacza, że email już był
                         errors.add("Linia " + lineNumber + ": Pracownik z emailem '" + email + "' już istnieje.");
                     }
 
                 } catch (InvalidDataException | IllegalArgumentException e) {
-                    // Łapiemy błędy walidacji dla tej JEDNEJ linii
+                    // Obsługa wyjątków walidacji biznesowej oraz błędów formatowania danych dla pojedynczego rekordu.
                     errors.add("Linia " + lineNumber + ": Błąd danych -> " + e.getMessage());
                 }
-                // ... i pętla leci dalej, do następnej linii!
             }
 
         } catch (IOException e) {
-            // Ten catch jest dla 'BufferedReader'
-            // Jakikolwiek błąd odczytu pliku (np. nie ma pliku)
+            // Obsługa krytycznych błędów wejścia-wyjścia (IO), np. brak pliku lub brak uprawnień odczytu.
+            // Tego typu błąd uniemożliwia dalsze przetwarzanie i przerywa import.
             errors.add("Krytyczny błąd odczytu pliku: " + e.getMessage());
         }
 
-        // Zwracamy nasz "raport" z importu
+        // Zwrócenie obiektu podsumowującego operację importu.
         return new ImportSummary(importedCount, errors);
     }
 }

@@ -17,11 +17,10 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-// Serwis do gadania z zewnętrznym API
+// Serwis odpowiedzialny za komunikację z zewnętrznym REST API.
+// Obsługuje wysyłanie żądań HTTP oraz deserializację odpowiedzi JSON na obiekty modelu wewnętrznego.
 public class ApiService {
 
-    // Klient HTTP i parser GSON.
-    // Tworzymy je raz i używamy wielokrotnie.
     private final HttpClient client;
     private final Gson gson;
 
@@ -31,68 +30,64 @@ public class ApiService {
     }
 
     /**
-     * Pobiera użytkowników z API i mapuje ich na naszą klasę Employee.
-     * Rzuca nasz własny wyjątek 'ApiException', jeśli coś pójdzie nie tak.
+     * Pobiera listę użytkowników z zewnętrznego serwisu i konwertuje ją na listę pracowników.
+     * Metoda wykonuje synchroniczne zapytanie HTTP GET, parsuje odpowiedź i mapuje wybrane pola.
+     *
+     * @return Lista obiektów Employee utworzona na podstawie danych z API.
+     * @throws ApiException W przypadku błędu sieciowego, błędu HTTP (status inny niż 200) lub błędu parsowania JSON.
      */
     public List<Employee> fetchEmployeesFromApi() throws ApiException {
         List<Employee> apiEmployees = new ArrayList<>();
 
-        // 1. Zbuduj zapytanie (Request) - dokładnie jak na wykładzie
+        // Konstrukcja żądania HTTP GET skierowanego do endpointu z danymi użytkowników.
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://jsonplaceholder.typicode.com/users"))
-                .GET() // Mówimy, że to metoda GET
+                .GET()
                 .build();
 
         try {
-            // 2. Wyślij zapytanie i pobierz odpowiedź (Response)
-            // Mówimy, że spodziewamy się odpowiedzi jako String (JSON)
+            // Wysłanie żądania i oczekiwanie na odpowiedź w formacie tekstowym (String).
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            // 3. Sprawdź status odpowiedzi
+            // Weryfikacja kodu statusu HTTP. Oczekiwany kod 200 (OK).
             if (response.statusCode() != 200) {
-                // Jeśli serwer nie odpowiedział "OK" (kod 200), to jest błąd
-                throw new ApiException("Błąd zapytania API. Status: " + response.statusCode());
+                throw new ApiException("Błąd zapytania API. Nieoczekiwany status: " + response.statusCode());
             }
 
-            // 4. Parsowanie JSON-a (tu wchodzi GSON)
+            // Deserializacja ciała odpowiedzi JSON do obiektu JsonArray przy użyciu biblioteki GSON.
             String jsonBody = response.body();
-
-            // Parsujemy cały string odpowiedzi na 'JsonArray' (bo API zwraca listę)
             JsonArray usersArray = gson.fromJson(jsonBody, JsonArray.class);
 
-            // 5. Iterujemy po tablicy JSON
+            // Iteracja po elementach tablicy JSON i mapowanie pól na obiekt domenowy Employee.
             for (JsonElement userElement : usersArray) {
-                // Każdy element tablicy to obiekt, więc rzutujemy go
                 JsonObject userObject = userElement.getAsJsonObject();
 
-                // Wyciągamy dane z JSON-a, pole po polu
-                // Dokładnie tak, jak na wykładzie: .get("nazwaPola").getAsTyp()
+                // Ekstrakcja podstawowych danych tekstowych z obiektu JSON.
                 String fullName = userObject.get("name").getAsString();
                 String email = userObject.get("email").getAsString();
 
-                // Pole "company.name" jest zagnieżdżone, więc musimy
-                // najpierw pobrać obiekt "company", a dopiero z niego "name"
+                // Nawigacja do zagnieżdżonego obiektu 'company' w celu pobrania nazwy firmy.
                 String companyName = userObject.get("company")
                         .getAsJsonObject()
                         .get("name")
                         .getAsString();
 
-                // Zgodnie z zadaniem, sztywne przypisanie stanowiska i pensji
+                // Przypisanie domyślnego stanowiska i wynagrodzenia dla pracowników importowanych z API.
                 Position position = Position.PROGRAMISTA;
-                double salary = position.getBaseSalary(); // Bierzemy bazową stawkę
+                double salary = position.getBaseSalary();
 
-                // Tworzymy pracownika i dodajemy do listy
                 apiEmployees.add(new Employee(fullName, email, companyName, position, salary));
             }
 
         } catch (IOException | InterruptedException e) {
-            // To są błędy związane z siecią (np. brak neta)
+            // Obsługa błędów warstwy transportowej lub przerwania wątku.
+            // Wyjątek jest opakowywany w ApiException w celu zachowania spójności interfejsu.
             throw new ApiException("Błąd połączenia z API: " + e.getMessage(), e);
         } catch (JsonSyntaxException e) {
-            // To jest błąd, jeśli API zwróci nam "nie-JSONa"
+            // Obsługa błędów wynikających z nieprawidłowej struktury otrzymanego JSON-a.
             throw new ApiException("Błąd parsowania odpowiedzi JSON: " + e.getMessage(), e);
         }
 
-        return apiEmployees; // Zwracamy listę pobranych pracowników
+        return apiEmployees;
     }
 }

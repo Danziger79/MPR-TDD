@@ -9,187 +9,176 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-
+// Import statyczny dla AssertJ (płynne asercje)
 import static org.assertj.core.api.Assertions.*;
+// Import statyczny dla Hamcrest (matcher'y)
 import static org.hamcrest.Matchers.*;
 
+// Klasa testowa weryfikująca logikę zarządzania zespołami (TeamService).
+// Pokrywa scenariusze przypisywania pracowników, transferów międzyzespołowych oraz walidacji reguł biznesowych (pojemność, różnorodność).
 class TeamServiceTest {
 
     private TeamService teamService;
-    private Employee pracownik;
+    private Employee employee;
     private ProjectTeam team;
 
+    // Inicjalizacja środowiska testowego.
     @BeforeEach
     void setUp() {
-        // Klasa jeszcze nie istnieje!
         teamService = new TeamService();
 
-
-        pracownik = new Employee("Jan Kowalski", "jan@tech.pl", "TechCorp",
+        // Utworzenie przykładowego pracownika i zespołu
+        employee = new Employee("Jan Kowalski", "jan@tech.pl", "TechCorp",
                 Position.PROGRAMISTA, 9000, LocalDate.of(2020, 1, 1));
         team = new ProjectTeam("Projekt Feniks");
     }
 
     @Test
-    @DisplayName("Dodanie pracownika do zespołu powinno ustawić mu zespół i dodać go do listy członków")
+    @DisplayName("Przypisanie pracownika do zespołu powinno ustanowić relację dwukierunkową")
     void shouldAddEmployeeToTeam() {
-        // Arrange (mamy w setup)
+        // Act
+        teamService.assignEmployeeToTeam(employee, team);
 
-
-        // Ta metoda jeszcze nie istnieje!
-        teamService.assignEmployeeToTeam(pracownik, team);
-
-
-
-
-        assertThat(pracownik.getCurrentTeam())
-                .as("Pracownik powinien mieć referencję do zespołu")
+        // Assert (AssertJ)
+        // Weryfikacja po stronie pracownika (czy wie, w jakim jest zespole)
+        assertThat(employee.getCurrentTeam())
+                .as("Pracownik powinien posiadać referencję do przypisanego zespołu")
                 .isNotNull()
-                .isSameAs(team); // Sprawdzamy, czy to TEN SAM obiekt zespołu
+                .isSameAs(team);
 
-
+        // Weryfikacja po stronie zespołu (czy ma pracownika na liście)
         assertThat(team.getMembers())
-                .as("Lista członków zespołu powinna zawierać pracownika")
+                .as("Lista członków zespołu powinna zawierać nowo dodanego pracownika")
                 .hasSize(1)
-                .contains(pracownik);
+                .contains(employee);
     }
+
     @Test
-    @DisplayName("Próba dodania pracownika, który jest już w zespole, powinna rzucić wyjątek")
+    @DisplayName("Próba przypisania pracownika będącego już w zespole powinna rzucić wyjątek")
     void shouldThrowExceptionWhenEmployeeAlreadyInATeam() {
-
-        teamService.assignEmployeeToTeam(pracownik, team);
-
-
+        // Arrange
+        teamService.assignEmployeeToTeam(employee, team);
         ProjectTeam teamB = new ProjectTeam("Projekt Goryl");
 
-
-        // Sprawdzamy, czy próba dodania do DRUGIEGO zespołu rzuci błędem
-        assertThatIllegalStateException() // Chcemy konkretny typ błędu
+        // Act & Assert
+        // System powinien zablokować próbę nadpisania zespołu bez wcześniejszego usunięcia (wymagany transfer)
+        assertThatIllegalStateException()
+                .as("Nie można przypisać pracownika, który jest już członkiem innego zespołu")
                 .isThrownBy(() -> {
-                    // Ta linijka powinna rzucić błędem
-                    teamService.assignEmployeeToTeam(pracownik, teamB);
+                    teamService.assignEmployeeToTeam(employee, teamB);
                 })
                 .withMessageContaining("Pracownik jest już w innym zespole");
     }
 
     @Test
-    @DisplayName("Próba dodania pracownika do pełnego zespołu powinna rzucić wyjątek")
+    @DisplayName("Próba dodania pracownika do pełnego zespołu (Max 5) powinna rzucić wyjątek")
     void shouldThrowExceptionWhenTeamIsFull() {
+        // Arrange - Wypełnienie zespołu do pełna (5 osób)
+        // Tworzymy 4 dodatkowych pracowników + nasz główny 'employee'
+        for (int i = 1; i <= 4; i++) {
+            Employee filler = new Employee("Filler" + i, "f" + i + "@tech.pl", "Tech", Position.STAZYSTA, 3000, LocalDate.now());
+            teamService.assignEmployeeToTeam(filler, team);
+        }
+        teamService.assignEmployeeToTeam(employee, team); // 5. osoba (Ostatnie wolne miejsce)
 
-        Employee e1 = new Employee("User1", "u1@tech.pl", "Tech", Position.STAZYSTA, 3000, LocalDate.now());
-        Employee e2 = new Employee("User2", "u2@tech.pl", "Tech", Position.STAZYSTA, 3000, LocalDate.now());
-        Employee e3 = new Employee("User3", "u3@tech.pl", "Tech", Position.STAZYSTA, 3000, LocalDate.now());
-        Employee e4 = new Employee("User4", "u4@tech.pl", "Tech", Position.STAZYSTA, 3000, LocalDate.now());
+        // Próba dodania 6. osoby
+        Employee extraEmployee = new Employee("Nadmiarowy", "over@tech.pl", "Tech", Position.STAZYSTA, 3000, LocalDate.now());
 
-
-        teamService.assignEmployeeToTeam(e1, team);
-        teamService.assignEmployeeToTeam(e2, team);
-        teamService.assignEmployeeToTeam(e3, team);
-        teamService.assignEmployeeToTeam(e4, team);
-
-
-        teamService.assignEmployeeToTeam(pracownik, team);
-
-
-        Employee e6_niezmesciSie = new Employee("User6", "u6@tech.pl", "Tech", Position.STAZYSTA, 3000, LocalDate.now());
-
-
+        // Act & Assert
         assertThatIllegalStateException()
+                .as("Dodanie pracownika powyżej limitu (5) powinno być zablokowane")
                 .isThrownBy(() -> {
-
-                    teamService.assignEmployeeToTeam(e6_niezmesciSie, team);
+                    teamService.assignEmployeeToTeam(extraEmployee, team);
                 })
                 .withMessageContaining("Zespół jest już pełny");
     }
+
     @Test
-    @DisplayName("Przeniesienie pracownika powinno usunąć go ze starego zespołu i dodać do nowego")
+    @DisplayName("Transfer pracownika powinien poprawnie przenieść go między zespołami (Atomowość operacji)")
     void shouldTransferEmployeeBetweenTeams() {
+        // Arrange
+        teamService.assignEmployeeToTeam(employee, team); // Zespół Źródłowy
+        ProjectTeam teamB = new ProjectTeam("Projekt Goryl"); // Zespół Docelowy
 
-        teamService.assignEmployeeToTeam(pracownik, team);
+        // Act
+        teamService.transferEmployee(employee, teamB);
 
-
-        ProjectTeam teamB = new ProjectTeam("Projekt Goryl");
-
-
-        teamService.transferEmployee(pracownik, teamB);
-
-
-        assertThat(pracownik.getCurrentTeam())
-                .as("Pracownik powinien być teraz w Zespole B")
+        // Assert
+        // 1. Pracownik wskazuje na nowy zespół
+        assertThat(employee.getCurrentTeam())
+                .as("Pracownik powinien być przypisany do zespołu docelowego")
                 .isSameAs(teamB);
 
-
+        // 2. Stary zespół jest pusty
         assertThat(team.getMembers())
-                .as("Zespół A nie powinien już mieć tego pracownika")
+                .as("Zespół źródłowy powinien zostać opuszczony")
                 .isEmpty();
 
-
+        // 3. Nowy zespół zawiera pracownika
         assertThat(teamB.getMembers())
-                .as("Zespół B powinien teraz mieć tego pracownika")
-                .containsExactly(pracownik); // Sprawdza, czy zawiera TYLKO jego
+                .as("Zespół docelowy powinien zawierać przetransferowanego pracownika")
+                .containsExactly(employee);
     }
+
     @Test
-    @DisplayName("Sprawdzenie różnorodności powinno zwrócić false, jeśli w zespole nie ma Managera")
+    @DisplayName("Weryfikacja różnorodności (Compliance) powinna zwrócić false dla zespołu bez Managera")
     void shouldReturnFalseForTeamWithNoManager() {
+        // Arrange - Zespół składający się tylko z Programisty i Stażysty
+        teamService.assignEmployeeToTeam(employee, team); // Programista
+        Employee intern = new Employee("Stażysta", "intern@tech.pl", "Tech", Position.STAZYSTA, 3000, LocalDate.now());
+        teamService.assignEmployeeToTeam(intern, team);
 
-        teamService.assignEmployeeToTeam(pracownik, team);
-
-
-        Employee p2 = new Employee("User1", "u1@tech.pl", "Tech", Position.PROGRAMISTA, 8000, LocalDate.now());
-        Employee s1 = new Employee("User2", "u2@tech.pl", "Tech", Position.STAZYSTA, 3000, LocalDate.now());
-        teamService.assignEmployeeToTeam(p2, team);
-        teamService.assignEmployeeToTeam(s1, team);
-
-
+        // Act
         boolean isCompliant = teamService.isTeamDiversityCompliant(team);
 
-
+        // Assert
         assertThat(isCompliant)
-                .as("Zespół bez Managera nie powinien być 'compliant'")
+                .as("Zespół bez osoby na stanowisku MANAGER nie spełnia wymogów compliance")
                 .isFalse();
     }
+
     @Test
-    @DisplayName("Sprawdzenie różnorodności powinno zwrócić true, jeśli w zespole jest Manager")
+    @DisplayName("Weryfikacja różnorodności powinna zwrócić true, jeśli w zespole znajduje się Manager")
     void shouldReturnTrueForTeamWithManager() {
-
-        teamService.assignEmployeeToTeam(pracownik, team);
-
-
+        // Arrange
+        teamService.assignEmployeeToTeam(employee, team);
         Employee manager = new Employee("Szef Szefów", "szef@tech.pl", "Tech", Position.MANAGER, 15000, LocalDate.now());
-
-
         teamService.assignEmployeeToTeam(manager, team);
 
-
+        // Act
         boolean isCompliant = teamService.isTeamDiversityCompliant(team);
 
-
+        // Assert
         assertThat(isCompliant)
-                .as("Zespół z Managerem powinien być 'compliant'")
+                .as("Obecność Managera powinna skutkować pozytywną weryfikacją compliance")
                 .isTrue();
     }
+
+    /**
+     * Test demonstracyjny pokazujący możliwości biblioteki Hamcrest.
+     * Weryfikuje złożone właściwości obiektów (Properties, Collections, Ranges).
+     */
     @Test
-    @DisplayName("Hamcrest: Sprawdzenie właściwości zespołu i pracownika")
+    @DisplayName("Demonstracja użycia matcherów biblioteki Hamcrest")
     void hamcrestMatchersShowcaseTest() {
+        // Arrange
+        teamService.assignEmployeeToTeam(employee, team);
 
-        teamService.assignEmployeeToTeam(pracownik, team);
+        // Assert (Hamcrest Syntax)
 
+        // Sprawdzenie czy wartość nie jest nullem
+        org.hamcrest.MatcherAssert.assertThat(employee.getCurrentTeam(), is(notNullValue()));
 
-
-        org.hamcrest.MatcherAssert.assertThat(pracownik.getCurrentTeam(), is(notNullValue()));
-
-
-        org.hamcrest.MatcherAssert.assertThat(pracownik.getCurrentTeam(),
+        // Inspekcja właściwości zagnieżdżonych (Bean Properties)
+        org.hamcrest.MatcherAssert.assertThat(employee.getCurrentTeam(),
                 hasProperty("teamName", startsWith("Projekt")));
 
-
+        // Operacje na kolekcjach
         org.hamcrest.MatcherAssert.assertThat(team.getMembers(), hasSize(1));
+        org.hamcrest.MatcherAssert.assertThat(team.getMembers(), hasItem(employee));
 
-
-        org.hamcrest.MatcherAssert.assertThat(team.getMembers(), hasItem(pracownik));
-
-
-        org.hamcrest.MatcherAssert.assertThat(pracownik.getSalary(),
-                is(allOf(greaterThan(8000.0), lessThan(10000.0)))); // 10: greaterThan, 11: lessThan
+        // Łączenie warunków logicznych (AND) - Sprawdzenie widełek płacowych
+        org.hamcrest.MatcherAssert.assertThat(employee.getSalary(),
+                is(allOf(greaterThan(8000.0), lessThan(10000.0))));
     }
 }
