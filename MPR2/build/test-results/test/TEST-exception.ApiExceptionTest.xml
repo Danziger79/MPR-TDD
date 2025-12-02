@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="exception.ApiExceptionTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-11-18T13:16:21.075Z" hostname="LUCY" time="0.719">
-  <properties/>
-  <testcase name="Konstruktor z wiadomością i przyczyną powinien zachować łańcuch wyjątków (Exception Chaining)" classname="exception.ApiExceptionTest" time="0.716"/>
-  <testcase name="Konstruktor z samą wiadomością powinien poprawnie ustawić komunikat błędu" classname="exception.ApiExceptionTest" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

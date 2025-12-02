@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="model.EmployeeTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-11-18T13:16:21.808Z" hostname="LUCY" time="0.123">
+<testsuite name="model.EmployeeTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-11-18T16:03:09.249Z" hostname="LUCY" time="0.179">
   <properties/>
-  <testcase name="testEquals_DifferentObjectType_ShouldReturnFalse()" classname="model.EmployeeTest" time="0.08"/>
-  <testcase name="testEquals_SameEmail_ShouldBeEqual()" classname="model.EmployeeTest" time="0.031"/>
+  <testcase name="testEquals_DifferentObjectType_ShouldReturnFalse()" classname="model.EmployeeTest" time="0.139"/>
+  <testcase name="testEquals_SameEmail_ShouldBeEqual()" classname="model.EmployeeTest" time="0.022"/>
   <testcase name="testHashCode_SameEmail_ShouldBeEqual()" classname="model.EmployeeTest" time="0.001"/>
-  <testcase name="testEquals_DifferentEmail_ShouldNotBeEqual()" classname="model.EmployeeTest" time="0.008"/>
+  <testcase name="testEquals_DifferentEmail_ShouldNotBeEqual()" classname="model.EmployeeTest" time="0.011"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
