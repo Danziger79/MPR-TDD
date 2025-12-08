@@ -27,6 +27,11 @@ repositories {
 
 // Sekcja zależności została POŁĄCZONA i UZUPEŁNIONA
 dependencies {
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.5.0' // mochito:)
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+
     // Nasza stara zależność do JSONa
     implementation 'com.google.code.gson:gson:2.10.1'
 

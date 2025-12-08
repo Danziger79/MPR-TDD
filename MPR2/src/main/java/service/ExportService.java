@@ -1,34 +1,51 @@
 package service;
 
 import interfaces.FileSystemAdapter;
+import java.io.IOException;
+import java.util.List;
 
-// Rola: Serwis odpowiedzialny za operacje eksportu danych do zewnętrznego systemu plików.
-// Opis: Klasa pełni funkcję logiki biznesowej, która formatuje dane i deleguje ich fizyczny zapis
-// do adaptera (FileSystemAdapter). Jest to główny obiekt testowany (SUT) w scenariuszach
-// wykorzystujących wzorzec Mock, służący do weryfikacji behawioralnej (czy serwis poprawnie "rozmawia" z systemem plików).
 public class ExportService {
 
-    // Abstrakcja systemu plików (zależność).
-    // Użycie interfejsu zamiast konkretnej implementacji umożliwia wstrzyknięcie obiektu Mock w testach.
-    private final FileSystemAdapter fileSystem;
+    private final FileSystemAdapter fileSystemAdapter;
 
-    public ExportService(FileSystemAdapter fileSystem) {
-        this.fileSystem = fileSystem;
+    // Dodajemy to pole, aby móc użyć na nim @Spy w teście
+    private final CsvFormatter csvFormatter;
+
+    public ExportService(FileSystemAdapter fileSystemAdapter, CsvFormatter csvFormatter) {
+        this.fileSystemAdapter = fileSystemAdapter;
+        this.csvFormatter = csvFormatter;
     }
 
     /**
-     * Przetwarza dane i zleca ich zapis w określonej lokalizacji.
-     *
-     * @param filename Nazwa pliku docelowego.
-     * @param data Surowe dane tekstowe do zapisania.
+     * Eksportuje listę danych do pliku CSV.
+     * Obsługuje wyjątki IO poprzez zapisanie logu błędu.
      */
-    public void exportData(String filename, String data) {
-        // Logika biznesowa: Formatowanie danych (dodanie nagłówka/prefiksu "CSV:").
-        String formattedData = "CSV:" + data;
+    public void exportData(String filename, List<String> data) {
+        try {
+            // 1. Używamy obiektu, który będzie szpiegowany (@Spy)
+            String content = csvFormatter.format(data);
 
-        // Interakcja z systemem zewnętrznym (Side Effect).
-        // W teście z użyciem Mocka weryfikujemy, czy ta metoda została wywołana
-        // dokładnie z taką ścieżką ("/export/" + filename) i tak sformatowaną treścią.
-        fileSystem.write("/export/" + filename, formattedData);
+            // 2. Próbujemy zapisać (tu w teście użyjemy doThrow, żeby wywołać błąd)
+            fileSystemAdapter.write(filename, content);
+
+        } catch (IOException e) {
+            System.err.println("Błąd zapisu! Próbuję zapisać log błędu...");
+
+            // 3. Logika Fallback - to zweryfikujemy, gdy poleci wyjątek
+            try {
+                fileSystemAdapter.write("error.log", "Failed to write: " + filename);
+            } catch (Exception ignored) {
+                // Ignorujemy błędy logowania błędu
+            }
+        }
+    }
+
+    // Klasa pomocnicza (normalnie byłaby w osobnym pliku, ale dla uproszczenia jest tu).
+    // To na niej użyjemy @Spy w teście.
+    public static class CsvFormatter {
+        public String format(List<String> data) {
+            // Proste łączenie przecinkami
+            return String.join(",", data);
+        }
     }
 }

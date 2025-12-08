@@ -5,9 +5,11 @@ package interfaces;
 // Stosowany w celu odseparowania logiki biznesowej od niskopoziomowych operacji wejścia-wyjścia (I/O).
 // Kluczowy dla testowalności – umożliwia zastąpienie rzeczywistych operacji dyskowych
 // obiektem typu Mock (FileSystemMock) w środowisku testowym.
-public interface FileSystemAdapter {
 
-    // Zleca zapis danych tekstowych pod wskazaną ścieżką.
-    // Implementacja odpowiada za techniczne aspekty operacji (strumienie, obsługa błędów IO).
-    void write(String path, String content);
+
+import java.io.IOException;
+
+public interface FileSystemAdapter {
+    // Dodajemy "throws IOException", żeby móc to symulować w teście
+    void write(String path, String content) throws IOException;
 }
