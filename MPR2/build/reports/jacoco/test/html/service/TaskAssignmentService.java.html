@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TaskAssignmentService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MPR2</a> &gt; <a href="index.source.html" class="el_package">service</a> &gt; <span class="el_source">TaskAssignmentService.java</span></div><h1>TaskAssignmentService.java</h1><pre class="source lang-java linenums">package service;
+
+import interfaces.CalendarService;
+import interfaces.SkillsRepository;
+import interfaces.TaskRepository;
+import model.Employee;
+
+public class TaskAssignmentService {
+
+    private final CalendarService calendarService;
+    private final SkillsRepository skillsRepository;
+    // Nowa zależność - tu będziemy zapisywać przydział (do weryfikacji w Mockito)
+    private final TaskRepository taskRepository;
+
+    // Konstruktor (SystemConfig usunięty, bo nie jest już potrzebny)
+    public TaskAssignmentService(CalendarService calendarService,
+                                 SkillsRepository skillsRepository,
+<span class="fc" id="L18">                                 TaskRepository taskRepository) {</span>
+<span class="fc" id="L19">        this.calendarService = calendarService;</span>
+<span class="fc" id="L20">        this.skillsRepository = skillsRepository;</span>
+<span class="fc" id="L21">        this.taskRepository = taskRepository;</span>
+<span class="fc" id="L22">    }</span>
+
+    /**
+     * Przydziela konkretnego pracownika do zadania, jeśli spełnia warunki.
+     */
+    public boolean assignTask(long taskId, Employee employee, String requiredSkill) {
+        // 1. Sprawdź dostępność (Stubbing w teście: when(...).thenReturn(...))
+        // Sprawdzamy, czy lista dostępnych pracowników zawiera naszego kandydata
+<span class="fc" id="L30">        boolean isAvailable = calendarService.getAvailableEmployees(taskId).contains(employee);</span>
+
+        // 2. Sprawdź kompetencje (Stubbing w teście)
+<span class="fc" id="L33">        boolean hasSkill = skillsRepository.getSkills(employee).contains(requiredSkill);</span>
+
+<span class="pc bpc" id="L35" title="2 of 4 branches missed.">        if (isAvailable &amp;&amp; hasSkill) {</span>
+            // 3. Zapisz przydział (Verify w teście: verify(taskRepository).saveAssignment(...))
+<span class="fc" id="L37">            taskRepository.saveAssignment(taskId, employee);</span>
+<span class="fc" id="L38">            return true;</span>
+        }
+
+<span class="nc" id="L41">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

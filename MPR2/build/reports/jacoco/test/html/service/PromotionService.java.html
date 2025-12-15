@@ -5,7 +5,7 @@ import model.Position;
 
 // Serwis domenowy odpowiedzialny za zarządzanie ścieżką kariery i wynagrodzeniami pracowników.
 // Obsługuje procesy awansów pionowych oraz rewaloryzacji wynagrodzeń z uwzględnieniem polityki płacowej firmy.
-<span class="fc" id="L8">public class PromotionService {</span>
+<span class="nc" id="L8">public class PromotionService {</span>
 
     /**
      * Przeprowadza procedurę awansu pracownika na nowe stanowisko.
@@ -17,20 +17,20 @@ import model.Position;
      * @throws IllegalArgumentException Jeśli nowe stanowisko jest na tym samym lub niższym poziomie hierarchii (democja/poziomo).
      */
     public void promote(Employee employee, Position newPosition) {
-<span class="fc" id="L20">        int oldLevel = employee.getPosition().getHierarchyLevel();</span>
-<span class="fc" id="L21">        int newLevel = newPosition.getHierarchyLevel();</span>
+<span class="nc" id="L20">        int oldLevel = employee.getPosition().getHierarchyLevel();</span>
+<span class="nc" id="L21">        int newLevel = newPosition.getHierarchyLevel();</span>
 
         // Blokada degradacji lub przesunięć poziomych.
         // W tym modelu biznesowym poziom 1 (Prezes) jest najwyższy, a 5 (Stażysta) najniższy.
         // Zatem awans następuje tylko wtedy, gdy nowa wartość (newLevel) jest mniejsza od starej.
-<span class="fc bfc" id="L26" title="All 2 branches covered.">        if (newLevel &gt;= oldLevel) {</span>
-<span class="fc" id="L27">            throw new IllegalArgumentException(&quot;Awans musi być na wyższe stanowisko&quot;);</span>
+<span class="nc bnc" id="L26" title="All 2 branches missed.">        if (newLevel &gt;= oldLevel) {</span>
+<span class="nc" id="L27">            throw new IllegalArgumentException(&quot;Awans musi być na wyższe stanowisko&quot;);</span>
         }
 
         // Aktualizacja stanowiska oraz reset wynagrodzenia do stawki bazowej nowej roli.
-<span class="fc" id="L31">        employee.setPosition(newPosition);</span>
-<span class="fc" id="L32">        employee.setSalary(newPosition.getBaseSalary());</span>
-<span class="fc" id="L33">    }</span>
+<span class="nc" id="L31">        employee.setPosition(newPosition);</span>
+<span class="nc" id="L32">        employee.setSalary(newPosition.getBaseSalary());</span>
+<span class="nc" id="L33">    }</span>
 
     /**
      * Aplikuje procentową podwyżkę wynagrodzenia dla pracownika.
@@ -41,23 +41,23 @@ import model.Position;
      * @throws IllegalArgumentException W przypadku podania ujemnej wartości procentowej.
      */
     public void giveRaise(Employee employee, double percentage) {
-<span class="fc bfc" id="L44" title="All 2 branches covered.">        if (percentage &lt; 0) {</span>
-<span class="fc" id="L45">            throw new IllegalArgumentException(&quot;Podwyżka nie może być ujemna&quot;);</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        if (percentage &lt; 0) {</span>
+<span class="nc" id="L45">            throw new IllegalArgumentException(&quot;Podwyżka nie może być ujemna&quot;);</span>
         }
 
-<span class="fc" id="L48">        double currentSalary = employee.getSalary();</span>
-<span class="fc" id="L49">        double raiseAmount = currentSalary * (percentage / 100.0);</span>
-<span class="fc" id="L50">        double newSalary = currentSalary + raiseAmount;</span>
+<span class="nc" id="L48">        double currentSalary = employee.getSalary();</span>
+<span class="nc" id="L49">        double raiseAmount = currentSalary * (percentage / 100.0);</span>
+<span class="nc" id="L50">        double newSalary = currentSalary + raiseAmount;</span>
 
         // Walidacja Business Rules: &quot;Capping&quot; wynagrodzenia.
         // Jeśli wyliczona kwota przekracza górne widełki dla stanowiska,
         // pensja zostaje spłaszczona do poziomu maksymalnego.
-<span class="fc" id="L55">        double maxSalary = employee.getPosition().getMaxSalary();</span>
-<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (newSalary &gt; maxSalary) {</span>
-<span class="fc" id="L57">            newSalary = maxSalary;</span>
+<span class="nc" id="L55">        double maxSalary = employee.getPosition().getMaxSalary();</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (newSalary &gt; maxSalary) {</span>
+<span class="nc" id="L57">            newSalary = maxSalary;</span>
         }
 
-<span class="fc" id="L60">        employee.setSalary(newSalary);</span>
-<span class="fc" id="L61">    }</span>
+<span class="nc" id="L60">        employee.setSalary(newSalary);</span>
+<span class="nc" id="L61">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -37,66 +37,66 @@ public class Employee {
 <span class="fc" id="L37">        this.dateOfHire = dateOfHire;</span>
 <span class="fc" id="L38">    }</span>
 
-<span class="fc" id="L40">    public String getName() { return name; }</span>
+<span class="nc" id="L40">    public String getName() { return name; }</span>
 <span class="nc" id="L41">    public String getEmail() { return email; }</span>
-<span class="fc" id="L42">    public String getCompanyName() { return companyName; }</span>
-<span class="fc" id="L43">    public Position getPosition() { return position; }</span>
-<span class="fc" id="L44">    public double getSalary() { return salary; }</span>
-<span class="fc" id="L45">    public LocalDate getDateOfHire() { return dateOfHire; }</span>
+<span class="nc" id="L42">    public String getCompanyName() { return companyName; }</span>
+<span class="nc" id="L43">    public Position getPosition() { return position; }</span>
+<span class="nc" id="L44">    public double getSalary() { return salary; }</span>
+<span class="nc" id="L45">    public LocalDate getDateOfHire() { return dateOfHire; }</span>
 
     public ProjectTeam getCurrentTeam() {
-<span class="fc" id="L48">        return currentTeam;</span>
+<span class="nc" id="L48">        return currentTeam;</span>
     }
 
     // Przypisuje pracownika do konkretnego zespołu projektowego.
     public void setCurrentTeam(ProjectTeam currentTeam) {
-<span class="fc" id="L53">        this.currentTeam = currentTeam;</span>
-<span class="fc" id="L54">    }</span>
+<span class="nc" id="L53">        this.currentTeam = currentTeam;</span>
+<span class="nc" id="L54">    }</span>
 
     // Usuwa pracownika z obecnego zespołu projektowego poprzez ustawienie referencji na null.
     public void leaveCurrentTeam() {
-<span class="fc" id="L58">        this.currentTeam = null;</span>
-<span class="fc" id="L59">    }</span>
+<span class="nc" id="L58">        this.currentTeam = null;</span>
+<span class="nc" id="L59">    }</span>
 
     public void setSalary(double salary) {
-<span class="fc" id="L62">        this.salary = salary;</span>
-<span class="fc" id="L63">    }</span>
+<span class="nc" id="L62">        this.salary = salary;</span>
+<span class="nc" id="L63">    }</span>
 
     public void setPosition(Position position) {
-<span class="fc" id="L66">        this.position = position;</span>
-<span class="fc" id="L67">    }</span>
+<span class="nc" id="L66">        this.position = position;</span>
+<span class="nc" id="L67">    }</span>
 
     // Zwraca historię ocen pracownika.
     // Metoda tworzy i zwraca nową kopię listy (defensive copy), aby zapobiec
     // modyfikacji wewnętrznej struktury danych obiektu przez zewnętrzne klasy.
     public List&lt;Integer&gt; getRatingHistory() {
-<span class="fc" id="L73">        return new ArrayList&lt;&gt;(ratingHistory);</span>
+<span class="nc" id="L73">        return new ArrayList&lt;&gt;(ratingHistory);</span>
     }
 
     // Dodaje nową ocenę do historii ocen pracownika.
     // Metoda przeprowadza walidację danych wejściowych - akceptuje tylko wartości z przedziału 1-5.
     // W przypadku podania nieprawidłowej wartości rzucany jest wyjątek IllegalArgumentException.
     public void addRating(int rating) {
-<span class="fc bfc" id="L80" title="All 4 branches covered.">        if (rating &lt; 1 || rating &gt; 5) {</span>
-<span class="fc" id="L81">            throw new IllegalArgumentException(&quot;Ocena musi być w skali 1-5&quot;);</span>
+<span class="nc bnc" id="L80" title="All 4 branches missed.">        if (rating &lt; 1 || rating &gt; 5) {</span>
+<span class="nc" id="L81">            throw new IllegalArgumentException(&quot;Ocena musi być w skali 1-5&quot;);</span>
         }
-<span class="fc" id="L83">        this.ratingHistory.add(rating);</span>
-<span class="fc" id="L84">    }</span>
+<span class="nc" id="L83">        this.ratingHistory.add(rating);</span>
+<span class="nc" id="L84">    }</span>
 
     // Przesłonięta metoda porównująca obiekty.
     // Dwa obiekty Employee są uznawane za identyczne, jeśli posiadają ten sam adres email (unikalny identyfikator).
     @Override
     public boolean equals(Object o) {
-<span class="fc bfc" id="L90" title="All 2 branches covered.">        if (this == o) return true;</span>
-<span class="fc bfc" id="L91" title="All 2 branches covered.">        if (!(o instanceof Employee)) return false;</span>
-<span class="fc" id="L92">        Employee employee = (Employee) o;</span>
-<span class="fc" id="L93">        return Objects.equals(email, employee.email);</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        if (this == o) return true;</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (!(o instanceof Employee)) return false;</span>
+<span class="nc" id="L92">        Employee employee = (Employee) o;</span>
+<span class="nc" id="L93">        return Objects.equals(email, employee.email);</span>
     }
 
     // Generuje kod hash na podstawie pola email, aby zachować spójność z kontraktem metody equals.
     @Override
     public int hashCode() {
-<span class="fc" id="L99">        return Objects.hash(email);</span>
+<span class="nc" id="L99">        return Objects.hash(email);</span>
     }
 
     @Override

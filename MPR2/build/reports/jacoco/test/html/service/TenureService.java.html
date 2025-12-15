@@ -6,7 +6,7 @@ import java.time.Period;
 
 // Serwis domeny HR odpowiedzialny za wyliczanie stażu pracy (seniority) pracowników.
 // Dostarcza funkcjonalności związane z analizą czasu trwania zatrudnienia w oparciu o daty.
-<span class="fc" id="L9">public class TenureService {</span>
+<span class="nc" id="L9">public class TenureService {</span>
 
     /**
      * Oblicza staż pracy pracownika w pełnych latach na dzień wskazanej daty odniesienia.
@@ -21,16 +21,16 @@ import java.time.Period;
         // Weryfikacja chronologii dat.
         // Sytuacja, w której data zatrudnienia następuje po dacie odniesienia (np. planowane zatrudnienie w przyszłości),
         // jest traktowana jako brak stażu (0 lat), co zapobiega błędom logicznym i wartościom ujemnym.
-<span class="fc bfc" id="L24" title="All 2 branches covered.">        if (employee.getDateOfHire().isAfter(currentDate)) {</span>
-<span class="fc" id="L25">            return 0;</span>
+<span class="nc bnc" id="L24" title="All 2 branches missed.">        if (employee.getDateOfHire().isAfter(currentDate)) {</span>
+<span class="nc" id="L25">            return 0;</span>
         }
 
         // Obliczenie okresu czasu (Period) między dwiema datami zgodnie z systemem kalendarzowym ISO-8601.
         // Klasa Period uwzględnia lata przestępne oraz różną długość miesięcy.
-<span class="fc" id="L30">        Period period = Period.between(employee.getDateOfHire(), currentDate);</span>
+<span class="nc" id="L30">        Period period = Period.between(employee.getDateOfHire(), currentDate);</span>
 
         // Ekstrakcja i zwrócenie liczby pełnych lat z obliczonego okresu.
-<span class="fc" id="L33">        return period.getYears();</span>
+<span class="nc" id="L33">        return period.getYears();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

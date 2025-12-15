@@ -82,3 +82,5 @@ class TrainingReminderServiceTest {
         verify(emailService, never()).send(any());
     }
 }
+
+// trzeba weryfikowac to co w when jest

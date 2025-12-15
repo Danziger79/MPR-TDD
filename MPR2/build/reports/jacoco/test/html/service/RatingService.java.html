@@ -6,13 +6,13 @@ import java.util.List;
 
 // Serwis odpowiedzialny za system oceniania efektywności pracowników.
 // Dostarcza interfejs do manipulacji historią ocen oraz wyliczania metryk statystycznych.
-<span class="fc" id="L9">public class RatingService {</span>
+<span class="nc" id="L9">public class RatingService {</span>
 
     // Rejestruje nową notę w historii pracownika.
     // Logika walidacji wartości oraz zapisu jest delegowana bezpośrednio do metody domenowej w klasie Employee.
     public void addRating(Employee employee, int rating) {
-<span class="fc" id="L14">        employee.addRating(rating);</span>
-<span class="fc" id="L15">    }</span>
+<span class="nc" id="L14">        employee.addRating(rating);</span>
+<span class="nc" id="L15">    }</span>
 
     /**
      * Oblicza średnią arytmetyczną ze wszystkich ocen zgromadzonych w historii pracownika.
@@ -22,21 +22,21 @@ import java.util.List;
      */
     public double getAverageRating(Employee employee) {
 
-<span class="fc" id="L25">        List&lt;Integer&gt; ratings = employee.getRatingHistory();</span>
+<span class="nc" id="L25">        List&lt;Integer&gt; ratings = employee.getRatingHistory();</span>
 
         // Obsługa przypadku brzegowego: pusta historia ocen.
         // Zwracamy wartość domyślną 0.0, aby uniknąć wyjątku dzielenia przez zero lub zwracania NaN.
-<span class="fc bfc" id="L29" title="All 2 branches covered.">        if (ratings.isEmpty()) {</span>
-<span class="fc" id="L30">            return 0.0;</span>
+<span class="nc bnc" id="L29" title="All 2 branches missed.">        if (ratings.isEmpty()) {</span>
+<span class="nc" id="L30">            return 0.0;</span>
         }
 
-<span class="fc" id="L33">        double sum = 0;</span>
-<span class="fc bfc" id="L34" title="All 2 branches covered.">        for (int rating : ratings) {</span>
-<span class="fc" id="L35">            sum += rating;</span>
-<span class="fc" id="L36">        }</span>
+<span class="nc" id="L33">        double sum = 0;</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">        for (int rating : ratings) {</span>
+<span class="nc" id="L35">            sum += rating;</span>
+<span class="nc" id="L36">        }</span>
 
         // Wyliczenie średniej poprzez podzielenie sumy punktów przez liczebność zbioru.
-<span class="fc" id="L39">        return sum / ratings.size();</span>
+<span class="nc" id="L39">        return sum / ratings.size();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

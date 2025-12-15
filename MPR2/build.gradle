@@ -1,72 +1,25 @@
-//  pluginy z obu wersji: java, application ORAZ jacoco
 plugins {
     id 'java'
-    id 'application'
-    id 'jacoco'
 }
 
-// Ustawiamy, która klasa ma metodę main
-application {
-    mainClass = 'Main'
-}
-
-// Nazwa naszej grupy i wersja
-group = 'com.bootcamp'
-version = '1.0.0'
-
-// Używamy Javy 11
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
-
-// Repozytoria
 repositories {
     mavenCentral()
 }
 
-// Sekcja zależności została POŁĄCZONA i UZUPEŁNIONA
 dependencies {
-
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.5.0' // mochito:)
-    testImplementation 'org.assertj:assertj-core:3.24.2'
-
-    // Nasza stara zależność do JSONa
-    implementation 'com.google.code.gson:gson:2.10.1'
-
-    // --- ZALEŻNOŚCI TESTOWE ---
-
-    // JUnit 5
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
-
-    // NOWA: Biblioteka AssertJ (ta z płynnym API)
-    testImplementation 'org.assertj:assertj-core:3.26.3'
-
-    // NOWA: Biblioteka Hamcrest (ta z matcherami 'is', 'equalTo')
+//    testy
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.assertj:assertj-core:3.25.3'
     testImplementation 'org.hamcrest:hamcrest:2.2'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.5.0'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.21.0'
+    implementation 'io.github.bonigarcia:webdrivermanager:6.1.0'
+
+//    Inne
+    implementation 'com.google.code.gson:gson:2.10.1'
 }
 
-// --- NOWA KONFIGURACJA TESTÓW ---
-// Ten blok jest potrzebny, żeby Gradle odpalał testy JUnit 5
-// i automatycznie generował raport JaCoCo
 test {
     useJUnitPlatform()
-    finalizedBy jacocoTestReport
-}
-
-// --- NOWA KONFIGURACJA JaCoCo ---
-
-jacocoTestReport {
-    dependsOn test
-    reports {
-        html.required = true  //  fajny raport HTML
-        xml.required = false
-        csv.required = false
-    }
-}
-
-// Ustawiamy kodowanie na UTF-8
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
 }

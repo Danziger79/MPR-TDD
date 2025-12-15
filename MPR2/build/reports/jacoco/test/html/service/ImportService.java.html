@@ -18,9 +18,9 @@ public class ImportService {
     // Referencja do głównego serwisu pracowniczego, umożliwiająca trwały zapis zwalidowanych danych.
     private EmployeeService employeeService;
 
-<span class="fc" id="L21">    public ImportService(EmployeeService employeeService) {</span>
-<span class="fc" id="L22">        this.employeeService = employeeService;</span>
-<span class="fc" id="L23">    }</span>
+<span class="nc" id="L21">    public ImportService(EmployeeService employeeService) {</span>
+<span class="nc" id="L22">        this.employeeService = employeeService;</span>
+<span class="nc" id="L23">    }</span>
 
     /**
      * Przeprowadza proces importu danych z pliku CSV.
@@ -31,32 +31,32 @@ public class ImportService {
      * @return Obiekt ImportSummary zawierający statystyki sukcesów oraz listę błędów walidacji.
      */
     public ImportSummary importFromCsv(String filePath) {
-<span class="fc" id="L34">        int importedCount = 0;</span>
-<span class="fc" id="L35">        List&lt;String&gt; errors = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L36">        int lineNumber = 0;</span>
+<span class="nc" id="L34">        int importedCount = 0;</span>
+<span class="nc" id="L35">        List&lt;String&gt; errors = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L36">        int lineNumber = 0;</span>
 
         // Wykorzystanie konstrukcji try-with-resources zapewnia automatyczne zamknięcie
         // strumienia wejściowego (BufferedReader) niezależnie od wyniku operacji (sukces lub wyjątek).
-<span class="fc" id="L40">        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {</span>
+<span class="nc" id="L40">        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {</span>
 
-<span class="fc" id="L42">            String line = reader.readLine();</span>
-<span class="fc" id="L43">            lineNumber++;</span>
+<span class="nc" id="L42">            String line = reader.readLine();</span>
+<span class="nc" id="L43">            lineNumber++;</span>
 
             // Weryfikacja nagłówka pliku. Jeśli plik jest pusty lub pierwsza linia nie istnieje,
             // proces importu zostaje przerwany, a błąd odnotowany.
-<span class="pc bpc" id="L47" title="1 of 4 branches missed.">            if (line == null || line.isEmpty()) {</span>
-<span class="fc" id="L48">                errors.add(&quot;Plik jest pusty.&quot;);</span>
-<span class="fc" id="L49">                return new ImportSummary(0, errors);</span>
+<span class="nc bnc" id="L47" title="All 4 branches missed.">            if (line == null || line.isEmpty()) {</span>
+<span class="nc" id="L48">                errors.add(&quot;Plik jest pusty.&quot;);</span>
+<span class="nc" id="L49">                return new ImportSummary(0, errors);</span>
             }
 
             // Pętla przetwarzająca właściwe dane (payload).
             // Każdy obrót pętli odpowiada jednej linii w pliku CSV.
-<span class="fc bfc" id="L54" title="All 2 branches covered.">            while ((line = reader.readLine()) != null) {</span>
-<span class="fc" id="L55">                lineNumber++;</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">            while ((line = reader.readLine()) != null) {</span>
+<span class="nc" id="L55">                lineNumber++;</span>
 
                 // Ignorowanie pustych linii (np. białych znaków na końcu pliku),
                 // aby uniknąć niepotrzebnych błędów parsowania.
-<span class="pc bpc" id="L59" title="1 of 2 branches missed.">                if (line.trim().isEmpty()) {</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">                if (line.trim().isEmpty()) {</span>
 <span class="nc" id="L60">                    continue;</span>
                 }
 
@@ -65,68 +65,68 @@ public class ImportService {
                 // lecz jest rejestrowany w liście błędów, a pętla przechodzi do kolejnego rekordu.
                 try {
                     // Podział linii na tokeny przy użyciu separatora przecinkowego.
-<span class="fc" id="L68">                    String[] data = line.split(&quot;,&quot;);</span>
+<span class="nc" id="L68">                    String[] data = line.split(&quot;,&quot;);</span>
 
                     // Wstępna walidacja struktury rekordu (oczekiwana liczba kolumn: 6).
-<span class="fc bfc" id="L71" title="All 2 branches covered.">                    if (data.length != 6) {</span>
-<span class="fc" id="L72">                        throw new InvalidDataException(&quot;Niepoprawna liczba kolumn (oczekiwano 6, jest &quot; + data.length + &quot;)&quot;);</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">                    if (data.length != 6) {</span>
+<span class="nc" id="L72">                        throw new InvalidDataException(&quot;Niepoprawna liczba kolumn (oczekiwano 6, jest &quot; + data.length + &quot;)&quot;);</span>
                     }
 
                     // Normalizacja danych wejściowych (usunięcie białych znaków).
-<span class="fc" id="L76">                    String firstName = data[0].trim();</span>
-<span class="fc" id="L77">                    String lastName = data[1].trim();</span>
-<span class="fc" id="L78">                    String email = data[2].trim();</span>
-<span class="fc" id="L79">                    String company = data[3].trim();</span>
-<span class="fc" id="L80">                    String positionStr = data[4].trim().toUpperCase();</span>
-<span class="fc" id="L81">                    String salaryStr = data[5].trim();</span>
+<span class="nc" id="L76">                    String firstName = data[0].trim();</span>
+<span class="nc" id="L77">                    String lastName = data[1].trim();</span>
+<span class="nc" id="L78">                    String email = data[2].trim();</span>
+<span class="nc" id="L79">                    String company = data[3].trim();</span>
+<span class="nc" id="L80">                    String positionStr = data[4].trim().toUpperCase();</span>
+<span class="nc" id="L81">                    String salaryStr = data[5].trim();</span>
 
                     // Walidacja i konwersja stanowiska (Position).
                     // W przypadku podania wartości spoza enum Position, zostanie rzucony wyjątek.
                     Position position;
                     try {
-<span class="fc" id="L87">                        position = Position.valueOf(positionStr);</span>
-<span class="fc" id="L88">                    } catch (IllegalArgumentException e) {</span>
-<span class="fc" id="L89">                        throw new InvalidDataException(&quot;Nieznane stanowisko: '&quot; + data[4].trim() + &quot;'&quot;);</span>
-<span class="fc" id="L90">                    }</span>
+<span class="nc" id="L87">                        position = Position.valueOf(positionStr);</span>
+<span class="nc" id="L88">                    } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L89">                        throw new InvalidDataException(&quot;Nieznane stanowisko: '&quot; + data[4].trim() + &quot;'&quot;);</span>
+<span class="nc" id="L90">                    }</span>
 
                     // Parsowanie wartości numerycznej wynagrodzenia wraz z walidacją logiczną.
                     double salary;
                     try {
-<span class="fc" id="L95">                        salary = Double.parseDouble(salaryStr);</span>
-<span class="fc" id="L96">                    } catch (NumberFormatException e) {</span>
-<span class="fc" id="L97">                        throw new InvalidDataException(&quot;Niepoprawny format pensji: '&quot; + salaryStr + &quot;'&quot;);</span>
-<span class="fc" id="L98">                    }</span>
+<span class="nc" id="L95">                        salary = Double.parseDouble(salaryStr);</span>
+<span class="nc" id="L96">                    } catch (NumberFormatException e) {</span>
+<span class="nc" id="L97">                        throw new InvalidDataException(&quot;Niepoprawny format pensji: '&quot; + salaryStr + &quot;'&quot;);</span>
+<span class="nc" id="L98">                    }</span>
 
-<span class="fc bfc" id="L100" title="All 2 branches covered.">                    if (salary &lt;= 0) {</span>
-<span class="fc" id="L101">                        throw new InvalidDataException(&quot;Pensja musi być dodatnia (jest &quot; + salary + &quot;)&quot;);</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">                    if (salary &lt;= 0) {</span>
+<span class="nc" id="L101">                        throw new InvalidDataException(&quot;Pensja musi być dodatnia (jest &quot; + salary + &quot;)&quot;);</span>
                     }
 
                     // Utworzenie obiektu domenowego po pomyślnej walidacji wszystkich pól.
-<span class="fc" id="L105">                    String fullName = firstName + &quot; &quot; + lastName;</span>
-<span class="fc" id="L106">                    Employee employee = new Employee(fullName, email, company, position, salary);</span>
+<span class="nc" id="L105">                    String fullName = firstName + &quot; &quot; + lastName;</span>
+<span class="nc" id="L106">                    Employee employee = new Employee(fullName, email, company, position, salary);</span>
 
                     // Próba zapisu pracownika w serwisie głównym.
                     // Metoda addEmployee zwraca false, jeśli pracownik o danym emailu już istnieje.
-<span class="fc bfc" id="L110" title="All 2 branches covered.">                    if (employeeService.addEmployee(employee)) {</span>
-<span class="fc" id="L111">                        importedCount++;</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">                    if (employeeService.addEmployee(employee)) {</span>
+<span class="nc" id="L111">                        importedCount++;</span>
                     } else {
-<span class="fc" id="L113">                        errors.add(&quot;Linia &quot; + lineNumber + &quot;: Pracownik z emailem '&quot; + email + &quot;' już istnieje.&quot;);</span>
+<span class="nc" id="L113">                        errors.add(&quot;Linia &quot; + lineNumber + &quot;: Pracownik z emailem '&quot; + email + &quot;' już istnieje.&quot;);</span>
                     }
 
-<span class="fc" id="L116">                } catch (InvalidDataException | IllegalArgumentException e) {</span>
+<span class="nc" id="L116">                } catch (InvalidDataException | IllegalArgumentException e) {</span>
                     // Obsługa wyjątków walidacji biznesowej oraz błędów formatowania danych dla pojedynczego rekordu.
-<span class="fc" id="L118">                    errors.add(&quot;Linia &quot; + lineNumber + &quot;: Błąd danych -&gt; &quot; + e.getMessage());</span>
-<span class="fc" id="L119">                }</span>
+<span class="nc" id="L118">                    errors.add(&quot;Linia &quot; + lineNumber + &quot;: Błąd danych -&gt; &quot; + e.getMessage());</span>
+<span class="nc" id="L119">                }</span>
             }
 
-<span class="fc" id="L122">        } catch (IOException e) {</span>
+<span class="nc" id="L122">        } catch (IOException e) {</span>
             // Obsługa krytycznych błędów wejścia-wyjścia (IO), np. brak pliku lub brak uprawnień odczytu.
             // Tego typu błąd uniemożliwia dalsze przetwarzanie i przerywa import.
-<span class="fc" id="L125">            errors.add(&quot;Krytyczny błąd odczytu pliku: &quot; + e.getMessage());</span>
-<span class="fc" id="L126">        }</span>
+<span class="nc" id="L125">            errors.add(&quot;Krytyczny błąd odczytu pliku: &quot; + e.getMessage());</span>
+<span class="nc" id="L126">        }</span>
 
         // Zwrócenie obiektu podsumowującego operację importu.
-<span class="fc" id="L129">        return new ImportSummary(importedCount, errors);</span>
+<span class="nc" id="L129">        return new ImportSummary(importedCount, errors);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

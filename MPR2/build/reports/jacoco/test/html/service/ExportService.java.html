@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExportService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MPR2</a> &gt; <a href="index.source.html" class="el_package">service</a> &gt; <span class="el_source">ExportService.java</span></div><h1>ExportService.java</h1><pre class="source lang-java linenums">package service;
+
+import interfaces.FileSystemAdapter;
+import java.io.IOException;
+import java.util.List;
+
+public class ExportService {
+
+    private final FileSystemAdapter fileSystemAdapter;
+
+    // Dodajemy to pole, aby móc użyć na nim @Spy w teście
+    private final CsvFormatter csvFormatter;
+
+<span class="nc" id="L14">    public ExportService(FileSystemAdapter fileSystemAdapter, CsvFormatter csvFormatter) {</span>
+<span class="nc" id="L15">        this.fileSystemAdapter = fileSystemAdapter;</span>
+<span class="nc" id="L16">        this.csvFormatter = csvFormatter;</span>
+<span class="nc" id="L17">    }</span>
+
+    /**
+     * Eksportuje listę danych do pliku CSV.
+     * Obsługuje wyjątki IO poprzez zapisanie logu błędu.
+     */
+    public void exportData(String filename, List&lt;String&gt; data) {
+        try {
+            // 1. Używamy obiektu, który będzie szpiegowany (@Spy)
+<span class="nc" id="L26">            String content = csvFormatter.format(data);</span>
+
+            // 2. Próbujemy zapisać (tu w teście użyjemy doThrow, żeby wywołać błąd)
+<span class="nc" id="L29">            fileSystemAdapter.write(filename, content);</span>
+
+<span class="nc" id="L31">        } catch (IOException e) {</span>
+<span class="nc" id="L32">            System.err.println(&quot;Błąd zapisu! Próbuję zapisać log błędu...&quot;);</span>
+
+            // 3. Logika Fallback - to zweryfikujemy, gdy poleci wyjątek
+            try {
+<span class="nc" id="L36">                fileSystemAdapter.write(&quot;error.log&quot;, &quot;Failed to write: &quot; + filename);</span>
+<span class="nc" id="L37">            } catch (Exception ignored) {</span>
+                // Ignorujemy błędy logowania błędu
+<span class="nc" id="L39">            }</span>
+<span class="nc" id="L40">        }</span>
+<span class="nc" id="L41">    }</span>
+
+    // Klasa pomocnicza (normalnie byłaby w osobnym pliku, ale dla uproszczenia jest tu).
+    // To na niej użyjemy @Spy w teście.
+<span class="nc" id="L45">    public static class CsvFormatter {</span>
+        public String format(List&lt;String&gt; data) {
+            // Proste łączenie przecinkami
+<span class="nc" id="L48">            return String.join(&quot;,&quot;, data);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
